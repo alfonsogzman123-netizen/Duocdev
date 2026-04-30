@@ -1,17 +1,30 @@
-# duocdev
+# DuocDev 🚀
 
-A new Flutter project.
+Aplicación móvil en desarrollo enfocada en estudiantes de Ingeniería Informática de Duoc UC.
 
-## Getting Started
+## 🎯 Objetivo
 
-This project is a starting point for a Flutter application.
+Crear una plataforma tipo SoloLearn/CoddyTech para aprender programación por niveles.
 
-A few resources to get you started if this is your first Flutter project:
+## 📱 Estado actual
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+- App funcionando en Flutter
+- Ejecución en emulador Android
+- Sistema base de niveles
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🚀 Tecnologías
+
+- Flutter
+- Dart
+- Android Studio
+
+## 📈 Futuro
+
+- Sistema de usuarios
+- XP y progreso
+- Desafíos
+- IA como tutor
+
+## 👨‍💻 SK
+
+Estudiante de Ingeniería Informática Duoc UC
