@@ -294,7 +294,18 @@ class CursoScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: ListTile(
-                      leading: Icon(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                            MaterialPageRoute(
+                              builder: (context) => LeccionScreen(
+                                tituloCurso: titulo,
+                                tituloLeccion: lecciones[index],
+        ),
+      ),
+    );
+  },
+  leading: Icon(
                         completada
                             ? Icons.check_circle
                             : Icons.play_circle_fill,
@@ -316,6 +327,150 @@ class CursoScreen extends StatelessWidget {
                     ),
                   );
                 },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class LeccionScreen extends StatelessWidget {
+  final String tituloCurso;
+  final String tituloLeccion;
+
+  const LeccionScreen({
+    super.key,
+    required this.tituloCurso,
+    required this.tituloLeccion,
+  });
+
+  String obtenerContenido() {
+    if (tituloLeccion == '¿Qué es Python?') {
+      return 'Python es un lenguaje de programación fácil de leer y muy usado para crear aplicaciones, automatizar tareas, analizar datos y aprender programación.';
+    }
+
+    if (tituloLeccion == 'Variables en Python') {
+      return 'Una variable permite guardar información. Por ejemplo, puedes guardar un nombre, una edad o un resultado.';
+    }
+
+    if (tituloLeccion == 'Condicionales if/else') {
+      return 'Los condicionales permiten que un programa tome decisiones. Si una condición se cumple, ocurre una acción; si no, ocurre otra.';
+    }
+
+    if (tituloLeccion == '¿Qué es Git?') {
+      return 'Git es una herramienta de control de versiones. Sirve para guardar cambios del código y poder volver a versiones anteriores.';
+    }
+
+    if (tituloLeccion == 'Commits') {
+      return 'Un commit es como una fotografía del estado actual del proyecto. Sirve para registrar avances importantes.';
+    }
+
+    return 'Esta lección introduce conceptos importantes para avanzar en la ruta de aprendizaje de DuocDev.';
+  }
+
+  String obtenerCodigoEjemplo() {
+    if (tituloLeccion == '¿Qué es Python?') {
+      return 'print("Hola DuocDev")';
+    }
+
+    if (tituloLeccion == 'Variables en Python') {
+      return 'nombre = "Alfonso"\nedad = 18\nprint(nombre)';
+    }
+
+    if (tituloLeccion == 'Condicionales if/else') {
+      return 'edad = 18\n\nif edad >= 18:\n    print("Mayor de edad")\nelse:\n    print("Menor de edad")';
+    }
+
+    if (tituloLeccion == '¿Qué es Git?') {
+      return 'git init\ngit status';
+    }
+
+    if (tituloLeccion == 'Commits') {
+      return 'git add .\ngit commit -m "Agrega nueva función"';
+    }
+
+    return '// Próximamente agregaremos un ejemplo para esta lección';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final contenido = obtenerContenido();
+    final codigo = obtenerCodigoEjemplo();
+
+    return Scaffold(
+      backgroundColor: const Color(0xFF0F172A),
+      appBar: AppBar(
+        title: Text(tituloCurso),
+        backgroundColor: const Color(0xFF111827),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              tituloLeccion,
+              style: const TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: Colors.cyanAccent,
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            Text(
+              contenido,
+              style: const TextStyle(
+                fontSize: 16,
+                color: Colors.white70,
+                height: 1.5,
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            const Text(
+              'Ejemplo de código',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: const Color(0xFF020617),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.cyanAccent.withOpacity(0.3)),
+              ),
+              child: Text(
+                codigo,
+                style: const TextStyle(
+                  fontFamily: 'monospace',
+                  fontSize: 15,
+                  color: Colors.greenAccent,
+                ),
+              ),
+            ),
+
+            const Spacer(),
+
+            SizedBox(
+              width: double.infinity,
+              height: 52,
+              child: ElevatedButton(
+                onPressed: () {},
+                child: const Text(
+                  'Continuar al desafío',
+                  style: TextStyle(fontSize: 16),
+                ),
               ),
             ),
           ],
