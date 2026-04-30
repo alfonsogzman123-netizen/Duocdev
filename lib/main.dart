@@ -179,16 +179,146 @@ class CursoScreen extends StatelessWidget {
 
   const CursoScreen({super.key, required this.titulo});
 
+  List<String> obtenerLecciones() {
+    if (titulo == 'Lógica de Programación') {
+      return [
+        'Introducción a la lógica',
+        'Variables y datos',
+        'Condicionales',
+        'Ciclos',
+        'Desafío final de lógica',
+      ];
+    }
+
+    if (titulo == 'Python Básico') {
+      return [
+        '¿Qué es Python?',
+        'Variables en Python',
+        'Condicionales if/else',
+        'Ciclos while y for',
+        'Funciones básicas',
+      ];
+    }
+
+    if (titulo == 'Git y GitHub') {
+      return [
+        '¿Qué es Git?',
+        'Crear repositorios',
+        'Commits',
+        'Push y pull',
+        'Subir proyecto a GitHub',
+      ];
+    }
+
+    if (titulo == 'Desarrollo Web') {
+      return [
+        'Introducción a HTML',
+        'Estructura de una página',
+        'CSS básico',
+        'JavaScript inicial',
+        'Mini proyecto web',
+      ];
+    }
+
+    if (titulo == 'Java') {
+      return [
+        'Introducción a Java',
+        'Variables y tipos de datos',
+        'Condicionales',
+        'Ciclos',
+        'Programación orientada a objetos',
+      ];
+    }
+
+    return [
+      'Introducción',
+      'Conceptos básicos',
+      'Ejercicios',
+      'Desafío final',
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
+    final lecciones = obtenerLecciones();
+
     return Scaffold(
+      backgroundColor: const Color(0xFF0F172A),
       appBar: AppBar(
         title: Text(titulo),
+        backgroundColor: const Color(0xFF111827),
       ),
-      body: Center(
-        child: Text(
-          'Contenido de $titulo',
-          style: const TextStyle(fontSize: 22),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              titulo,
+              style: const TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: Colors.cyanAccent,
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            const Text(
+              'Completa las lecciones para ganar XP y avanzar de nivel.',
+              style: TextStyle(color: Colors.white70),
+            ),
+
+            const SizedBox(height: 24),
+
+            const Text(
+              'Lecciones',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            Expanded(
+              child: ListView.builder(
+                itemCount: lecciones.length,
+                itemBuilder: (context, index) {
+                  final completada = index == 0;
+
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1E293B),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: ListTile(
+                      leading: Icon(
+                        completada
+                            ? Icons.check_circle
+                            : Icons.play_circle_fill,
+                        color: completada
+                            ? Colors.greenAccent
+                            : Colors.cyanAccent,
+                      ),
+                      title: Text(
+                        lecciones[index],
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        completada ? 'Completada' : 'Pendiente',
+                        style: const TextStyle(color: Colors.white70),
+                      ),
+                      trailing: const Icon(Icons.arrow_forward_ios),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
