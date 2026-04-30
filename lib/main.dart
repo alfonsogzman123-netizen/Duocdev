@@ -448,7 +448,9 @@ class LeccionScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: const Color(0xFF020617),
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.cyanAccent.withOpacity(0.3)),
+                border: Border.all(
+                  color: Colors.cyanAccent.withOpacity(0.3),
+                ),
               ),
               child: Text(
                 codigo,
@@ -466,9 +468,211 @@ class LeccionScreen extends StatelessWidget {
               width: double.infinity,
               height: 52,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DesafioScreen(
+                        tituloLeccion: tituloLeccion,
+                      ),
+                    ),
+                  );
+                },
                 child: const Text(
                   'Continuar al desafío',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class DesafioScreen extends StatefulWidget {
+  final String tituloLeccion;
+
+  const DesafioScreen({
+    super.key,
+    required this.tituloLeccion,
+  });
+
+  @override
+  State<DesafioScreen> createState() => _DesafioScreenState();
+}
+
+class _DesafioScreenState extends State<DesafioScreen> {
+  int? respuestaSeleccionada;
+  bool respondido = false;
+
+  Map<String, dynamic> obtenerDesafio() {
+    if (widget.tituloLeccion == 'Variables en Python') {
+      return {
+        'pregunta': '¿Para qué sirve una variable?',
+        'opciones': [
+          'Para guardar información',
+          'Para borrar archivos',
+          'Para apagar el computador',
+          'Para cambiar el sistema operativo',
+        ],
+        'correcta': 0,
+      };
+    }
+
+    if (widget.tituloLeccion == 'Condicionales if/else') {
+      return {
+        'pregunta': '¿Qué permite hacer un condicional?',
+        'opciones': [
+          'Repetir música',
+          'Tomar decisiones en el programa',
+          'Crear carpetas automáticamente',
+          'Instalar Python',
+        ],
+        'correcta': 1,
+      };
+    }
+
+    if (widget.tituloLeccion == '¿Qué es Git?') {
+      return {
+        'pregunta': '¿Para qué se usa Git?',
+        'opciones': [
+          'Editar imágenes',
+          'Controlar versiones del código',
+          'Crear videos',
+          'Diseñar logos',
+        ],
+        'correcta': 1,
+      };
+    }
+
+    return {
+      'pregunta': '¿Cuál es el objetivo principal de esta lección?',
+      'opciones': [
+        'Aprender un concepto nuevo',
+        'Cerrar la aplicación',
+        'Borrar el proyecto',
+        'Cambiar el nombre del computador',
+      ],
+      'correcta': 0,
+    };
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final desafio = obtenerDesafio();
+    final opciones = desafio['opciones'] as List<String>;
+    final correcta = desafio['correcta'] as int;
+
+    return Scaffold(
+      backgroundColor: const Color(0xFF0F172A),
+      appBar: AppBar(
+        title: const Text('Desafío'),
+        backgroundColor: const Color(0xFF111827),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Pon a prueba lo aprendido',
+              style: TextStyle(
+                color: Colors.cyanAccent,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            Text(
+              desafio['pregunta'],
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            ...List.generate(opciones.length, (index) {
+              final seleccionada = respuestaSeleccionada == index;
+              final esCorrecta = index == correcta;
+
+              Color color = const Color(0xFF1E293B);
+
+              if (respondido && seleccionada && esCorrecta) {
+                color = Colors.green;
+              } else if (respondido && seleccionada && !esCorrecta) {
+                color = Colors.red;
+              } else if (respondido && esCorrecta) {
+                color = Colors.green.withOpacity(0.6);
+              }
+
+              return GestureDetector(
+                onTap: respondido
+                    ? null
+                    : () {
+                        setState(() {
+                          respuestaSeleccionada = index;
+                        });
+                      },
+                child: Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.only(bottom: 12),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: seleccionada && !respondido
+                        ? Colors.cyanAccent.withOpacity(0.2)
+                        : color,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: seleccionada
+                          ? Colors.cyanAccent
+                          : Colors.transparent,
+                    ),
+                  ),
+                  child: Text(
+                    opciones[index],
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ),
+              );
+            }),
+
+            const Spacer(),
+
+            if (respondido)
+              Text(
+                respuestaSeleccionada == correcta
+                    ? '¡Correcto! +20 XP'
+                    : 'Incorrecto. Revisa la lección e inténtalo otra vez.',
+                style: TextStyle(
+                  color: respuestaSeleccionada == correcta
+                      ? Colors.greenAccent
+                      : Colors.redAccent,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+            const SizedBox(height: 16),
+
+            SizedBox(
+              width: double.infinity,
+              height: 52,
+              child: ElevatedButton(
+                onPressed: respuestaSeleccionada == null
+                    ? null
+                    : () {
+                        setState(() {
+                          respondido = true;
+                        });
+                      },
+                child: const Text(
+                  'Responder',
                   style: TextStyle(fontSize: 16),
                 ),
               ),
