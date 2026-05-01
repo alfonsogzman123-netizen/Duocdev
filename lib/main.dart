@@ -13,11 +13,128 @@ class DuocDevApp extends StatelessWidget {
       title: 'DuocDev',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
-      home: const HomeScreen(),
+      home: const MainScreen(),
     );
   }
 }
+class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
 
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  int paginaActual = 0;
+
+  final List<Widget> pantallas = const [
+    const HomeScreen(),
+    const HomeScreen(),
+    const PerfilScreen(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: pantallas[paginaActual],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: paginaActual,
+        backgroundColor: const Color(0xFF111827),
+        selectedItemColor: Colors.cyanAccent,
+        unselectedItemColor: Colors.white54,
+        onTap: (index) {
+          setState(() {
+            paginaActual = index;
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Inicio',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.school),
+            label: 'Ruta',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Perfil',
+          ),
+        ],
+      ),
+    );
+  }
+}
+class PerfilScreen extends StatelessWidget {
+  const PerfilScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF0F172A),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Perfil',
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.cyanAccent,
+                ),
+              ),
+              const SizedBox(height: 24),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1E293B),
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                child: const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CircleAvatar(
+                      radius: 35,
+                      backgroundColor: Colors.cyanAccent,
+                      child: Icon(
+                        Icons.person,
+                        size: 40,
+                        color: Colors.black,
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      'Estudiante DuocDev',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 6),
+                    Text(
+                      'Ingeniería Informática',
+                      style: TextStyle(color: Colors.white70),
+                    ),
+                    SizedBox(height: 18),
+                    Text('Nivel actual: 2'),
+                    SizedBox(height: 8),
+                    Text('XP acumulado: 650'),
+                    SizedBox(height: 8),
+                    Text('Lecciones completadas: 3'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
