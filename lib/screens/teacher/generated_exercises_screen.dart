@@ -20,7 +20,14 @@ class _GeneratedExercisesScreenState extends State<GeneratedExercisesScreen> {
   bool loading = false;
 
   @override
-  void initState() { super.initState(); materialId = widget.preselectedMaterialId ?? materialService.getMaterials().isNotEmpty ? materialService.getMaterials().first.id : null; }
+void initState() {
+  super.initState();
+
+  final materials = materialService.getMaterials();
+
+  materialId = widget.preselectedMaterialId ??
+      (materials.isNotEmpty ? materials.first.id : null);
+}
 
   @override
   Widget build(BuildContext context) {
