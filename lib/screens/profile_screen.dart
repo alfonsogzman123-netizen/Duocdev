@@ -1,4 +1,5 @@
 import 'package:duocdev/services/progress_service.dart';
+import 'package:duocdev/screens/teacher/teacher_dashboard_screen.dart';
 import 'package:duocdev/widgets/app_cards.dart';
 import 'package:flutter/material.dart';
 
@@ -31,6 +32,8 @@ class ProfileScreen extends StatelessWidget {
           _MiniStat(title: 'Racha', value: '7 días', icon: Icons.local_fire_department, color: Color(0xFFFB923C)),
           _MiniStat(title: 'Insignias', value: '4', icon: Icons.workspace_premium, color: Color(0xFF8B5CF6)),
         ]),
+        const SizedBox(height: 14),
+        PrimaryButton(label: 'Entrar como profesor', onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TeacherDashboardScreen()))),
         const SizedBox(height: 14),
         const Text('Insignias', style: TextStyle(fontSize: 26, fontWeight: FontWeight.w700)),
         const SizedBox(height: 8),
