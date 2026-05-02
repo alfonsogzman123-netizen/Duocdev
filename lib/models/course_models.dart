@@ -1,8 +1,11 @@
+enum CourseStatus { available, inProgress, locked }
+
 class Lesson {
   final String id;
   final String title;
   final String content;
   final String code;
+  final String tip;
   final Challenge challenge;
 
   const Lesson({
@@ -10,6 +13,7 @@ class Lesson {
     required this.title,
     required this.content,
     required this.code,
+    required this.tip,
     required this.challenge,
   });
 }
@@ -31,6 +35,7 @@ class Course {
   final String title;
   final String level;
   final String description;
+  final CourseStatus status;
   final List<Lesson> lessons;
 
   const Course({
@@ -38,6 +43,7 @@ class Course {
     required this.title,
     required this.level,
     required this.description,
+    required this.status,
     required this.lessons,
   });
 }

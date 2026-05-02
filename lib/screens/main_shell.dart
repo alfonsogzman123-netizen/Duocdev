@@ -1,6 +1,7 @@
 import 'package:duocdev/screens/home_screen.dart';
 import 'package:duocdev/screens/profile_screen.dart';
 import 'package:duocdev/screens/route_screen.dart';
+import 'package:duocdev/screens/tutor_screen.dart';
 import 'package:flutter/material.dart';
 
 class MainShell extends StatefulWidget {
@@ -18,6 +19,7 @@ class _MainShellState extends State<MainShell> {
     final pages = [
       HomeScreen(onGoToRoute: () => setState(() => page = 1)),
       const RouteScreen(),
+      const TutorScreen(),
       const ProfileScreen(),
     ];
     return Scaffold(
@@ -28,6 +30,7 @@ class _MainShellState extends State<MainShell> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
           BottomNavigationBarItem(icon: Icon(Icons.school), label: 'Ruta'),
+          BottomNavigationBarItem(icon: Icon(Icons.auto_awesome), label: 'Tutor IA'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
         ],
       ),
