@@ -61,7 +61,7 @@ class RouteScreen extends StatelessWidget {
                 const SizedBox(width: 8),
                 Padding(
                   padding: const EdgeInsets.only(top: 6),
-                  child: Icon(locked ? Icons.lock_rounded : Icons.check_circle_outline_rounded, color: locked ? Colors.white54 : const Color(0xFF22C55E), size: 30),
+                  child: Icon(_statusIcon(locked: locked, progress: progress), color: _statusColor(locked: locked, progress: progress), size: 30),
                 ),
               ]),
             ),
@@ -74,4 +74,18 @@ class RouteScreen extends StatelessWidget {
   String _emoji(String id) => switch (id) {'logica' => '{}', 'python' => '🐍', 'git' => '🔀', 'web' => '🌐', 'java' => '☕', 'sql' => '🛢️', _ => '🔒'};
   double _progress(String id) => {'logica': 1.0, 'python': 0.75, 'git': 0.6, 'web': 0.25}.containsKey(id) ? {'logica': 1.0, 'python': 0.75, 'git': 0.6, 'web': 0.25}[id]! : 0.0;
   Color _color(String id) => {'logica': const Color(0xFF22C55E), 'python': const Color(0xFF8B5CF6), 'git': const Color(0xFFFB923C), 'web': const Color(0xFF38BDF8)}[id] ?? const Color(0xFF334155);
+
+  IconData _statusIcon({required bool locked, required double progress}) {
+    if (locked) return Icons.lock_rounded;
+    if (progress >= 1) return Icons.check_circle_rounded;
+    if (progress > 0) return Icons.timelapse_rounded;
+    return Icons.radio_button_unchecked_rounded;
+  }
+
+  Color _statusColor({required bool locked, required double progress}) {
+    if (locked) return Colors.white54;
+    if (progress >= 1) return const Color(0xFF22C55E);
+    if (progress > 0) return const Color(0xFF8B5CF6);
+    return const Color(0xFF94A3B8);
+  }
 }
