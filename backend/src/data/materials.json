@@ -1,0 +1,12 @@
+[
+  {
+    "id": "mat_py_demo",
+    "title": "Variables y condicionales en Python",
+    "courseId": "python",
+    "unitName": "Fundamentos",
+    "teacherName": "Profesor DuocDev",
+    "rawText": "Las variables guardan datos en memoria. if, elif y else permiten ejecutar distintas ramas lógicas según condiciones verdaderas o falsas.",
+    "tags": ["python", "variables", "condicionales"],
+    "createdAt": "2026-05-04T00:00:00.000Z"
+  }
+]
