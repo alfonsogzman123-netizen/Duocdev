@@ -10,13 +10,21 @@ DuocDev es una app educativa inspirada en **SoloLearn, CoddyTech y Duolingo**, o
 
 ## Capturas del proyecto
 
-- Inicio
-- Cursos
-- Tutor IA
-- Perfil
-- Modo Profesor
+### Inicio
 
-> Próximamente se agregarán capturas oficiales del MVP.
+![Pantalla de inicio de DuocDev](docs/images/inicio.png)
+
+### Cursos
+
+![Ruta de cursos de DuocDev](docs/images/cursos.png)
+
+### Tutor IA
+
+![Tutor IA de DuocDev](docs/images/tutor-ia.png)
+
+### Perfil
+
+![Perfil del estudiante en DuocDev](docs/images/perfil.png)
 
 ---
 
