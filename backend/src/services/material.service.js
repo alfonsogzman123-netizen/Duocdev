@@ -1,7 +1,8 @@
-import fs from 'node:fs/promises';
-import path from 'node:path';
+import fs from 'fs/promises';
+import path from 'path';
 
-const materialsPath = path.resolve('backend/src/data/materials.json');
+const dataDir = path.join(process.cwd(), 'src', 'data');
+const materialsPath = path.join(dataDir, 'materials.json');
 
 async function readMaterials() {
   const raw = await fs.readFile(materialsPath, 'utf-8');

@@ -24,7 +24,7 @@ class _TutorScreenState extends State<TutorScreen> {
 
   Future<void> _send() async {
     if (_controller.text.trim().isEmpty) return;
-    final materials = materialService.getMaterials();
+    final materials = materialService.cachedMaterials;
     final selected = materials.where((m) => m.id == _materialId).toList();
     final materialContext = selected.isEmpty ? '' : 'Material: ${selected.first.title}\n${selected.first.rawText}';
     setState(() => _loading = true);
@@ -41,7 +41,7 @@ class _TutorScreenState extends State<TutorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final mats = materialService.getMaterials();
+    final mats = materialService.cachedMaterials;
     return SafeArea(
       child: ListView(padding: const EdgeInsets.all(20), children: [
         const Text('Tutor IA', style: TextStyle(fontSize: 36, fontWeight: FontWeight.w800)),

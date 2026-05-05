@@ -11,7 +11,7 @@ class TeacherDashboardStats {
 class TeacherService {
   TeacherDashboardStats getTeacherDashboardStats() {
     final all = exerciseGenerationService.all;
-    return TeacherDashboardStats(materialService.getMaterials().length, all.length, all.where((e) => e.approved).length);
+    return TeacherDashboardStats(materialService.cachedMaterials.length, all.length, all.where((e) => e.approved).length);
   }
 }
 
