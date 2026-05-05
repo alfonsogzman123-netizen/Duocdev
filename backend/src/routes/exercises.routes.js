@@ -1,24 +1,10 @@
 import { Router } from 'express';
-import { approveExercise, getExercises, getPublishedExercisesByCourse, publishExercise } from '../services/exercise.service.js';
+import { approveExerciseController, listExercises, listPublishedByCourse, publishExerciseController } from '../controllers/exercises.controller.js';
 
 const router = Router();
-
-router.get('/exercises', async (_req, res) => res.json(await getExercises()));
-
-router.post('/exercises/:id/approve', async (req, res) => {
-  const updated = await approveExercise(req.params.id);
-  if (!updated) return res.status(404).json({ error: 'Ejercicio no encontrado' });
-  res.json(updated);
-});
-
-router.post('/exercises/:id/publish', async (req, res) => {
-  const updated = await publishExercise(req.params.id);
-  if (!updated) return res.status(404).json({ error: 'Ejercicio no encontrado' });
-  res.json(updated);
-});
-
-router.get('/courses/:courseId/exercises', async (req, res) => {
-  res.json(await getPublishedExercisesByCourse(req.params.courseId));
-});
+router.get('/exercises', listExercises);
+router.post('/exercises/:id/approve', approveExerciseController);
+router.post('/exercises/:id/publish', publishExerciseController);
+router.get('/courses/:courseId/exercises', listPublishedByCourse);
 
 export default router;

@@ -1,7 +1,8 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-const exercisesPath = path.resolve('backend/src/data/exercises.json');
+const dataDir = path.join(process.cwd(), 'src', 'data');
+const exercisesPath = path.join(dataDir, 'exercises.json');
 
 async function readExercises() {
   const raw = await fs.readFile(exercisesPath, 'utf-8');

@@ -1,8 +1,7 @@
 import { Router } from 'express';
+import { getAiInfo } from '../controllers/ai.controller.js';
 
 const router = Router();
-router.get('/ai/info', (_req, res) => {
-  res.json({ message: 'Usa /materials/:id/generate-exercises para generación IA/demo.' });
-});
+router.get('/ai/info', getAiInfo);
 
 export default router;
