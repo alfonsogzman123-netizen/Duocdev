@@ -27,11 +27,16 @@ class _MainShellState extends State<MainShell> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: page,
         onTap: (value) => setState(() => page = value),
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: const Color(0xFF111827),
+        selectedItemColor: const Color(0xFF8B5CF6),
+        unselectedItemColor: const Color(0xFF94A3B8),
+        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w700),
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
-          BottomNavigationBarItem(icon: Icon(Icons.school), label: 'Ruta'),
+          BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: 'Inicio'),
+          BottomNavigationBarItem(icon: Icon(Icons.menu_book_rounded), label: 'Cursos'),
           BottomNavigationBarItem(icon: Icon(Icons.auto_awesome), label: 'Tutor IA'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
+          BottomNavigationBarItem(icon: Icon(Icons.person_rounded), label: 'Perfil'),
         ],
       ),
     );
