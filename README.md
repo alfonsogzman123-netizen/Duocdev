@@ -1,30 +1,183 @@
-# DuocDev 🚀
+# DuocDev
 
-Aplicación móvil en desarrollo enfocada en estudiantes de Ingeniería Informática de Duoc UC.
+**Plataforma educativa móvil para estudiantes de Ingeniería Informática.**
 
-## 🎯 Objetivo
+DuocDev es una app educativa inspirada en **SoloLearn, CoddyTech y Duolingo**, orientada a estudiantes de Ingeniería Informática de **Duoc UC**. El proyecto combina aprendizaje por rutas, desafíos interactivos, gamificación (XP/progreso), Tutor IA y un modo profesor simulado para crear y publicar práctica académica.
 
-Crear una plataforma tipo SoloLearn/CoddyTech para aprender programación por niveles.
+> ⚠️ Estado del proyecto: **MVP educativo avanzado en desarrollo** (no producción).
 
-## 📱 Estado actual
+---
 
-- App funcionando en Flutter
-- Ejecución en emulador Android
-- Sistema base de niveles
+## Capturas del proyecto
 
-## 🚀 Tecnologías
+Estas capturas corresponden al estado actual del MVP.
+
+### Inicio
+
+![Pantalla de inicio de DuocDev](docs/images/inicio.png)
+
+### Cursos
+
+![Ruta de cursos de DuocDev](docs/images/cursos.png)
+
+### Tutor IA
+
+![Tutor IA de DuocDev](docs/images/tutor-ia.png)
+
+### Perfil
+
+![Perfil del estudiante en DuocDev](docs/images/perfil.png)
+
+---
+
+## Funcionalidades actuales
+
+- Ruta de aprendizaje por cursos.
+- Lecciones con contenido y ejemplos.
+- Desafíos interactivos.
+- Pantalla de resultado.
+- XP y progreso local.
+- Perfil del estudiante.
+- Tutor IA.
+- Modo profesor.
+- Carga de material académico.
+- Generación de ejercicios desde material.
+- Aprobación y publicación de ejercicios.
+- Backend MVP.
+
+---
+
+## Modo estudiante 👨‍🎓
+
+Flujo principal:
+
+`Inicio → Cursos → Curso → Lección → Desafío → Resultado → Perfil`
+
+---
+
+## Modo profesor 👩‍🏫
+
+Flujo principal:
+
+`Perfil → Modo Profesor → Subir material → Generar ejercicios → Aprobar/Publicar → Estudiante practica`
+
+---
+
+## Tutor IA 🤖
+
+- Funciona en **modo demo** cuando no hay API key.
+- Está preparado para **IA real** con integración OpenAI.
+- Permite trabajar con **contexto académico** para respuestas más útiles.
+
+---
+
+## Backend MVP (Node.js + Express) 🛠️
+
+El repositorio incluye un backend independiente en `backend/` para materiales y ejercicios.
+
+Endpoints principales:
+
+- `GET /health`
+- `GET /materials`
+- `POST /materials`
+- `POST /materials/:id/generate-exercises`
+- `GET /exercises`
+- `POST /exercises/:id/approve`
+- `POST /exercises/:id/publish`
+
+---
+
+## Tecnologías
 
 - Flutter
 - Dart
+- Node.js
+- Express
+- OpenAI API preparada
+- Git/GitHub
 - Android Studio
 
-## 📈 Futuro
+---
 
-- Sistema de usuarios
-- XP y progreso
-- Desafíos
-- IA como tutor
+## Estructura del proyecto
 
-## 👨‍💻 SK
+```text
+Duocdev/
+  lib/
+  backend/
+  android/
+  README.md
+```
 
-Estudiante de Ingeniería Informática Duoc UC
+---
+
+## Cómo ejecutar la app Flutter
+
+```bash
+flutter clean
+flutter pub get
+flutter run
+```
+
+---
+
+## Cómo ejecutar backend
+
+**Opción Windows (CMD):**
+
+```bash
+cd backend
+npm.cmd install
+npm.cmd run dev
+```
+
+**Opción estándar:**
+
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+---
+
+## Probar backend
+
+Abrir en navegador o cliente HTTP:
+
+`http://localhost:3000/health`
+
+---
+
+## Variables de entorno 🔐
+
+- No se suben claves reales al repositorio.
+- Usar archivo de ejemplo:
+  - `backend/.env.example`
+- Variable preparada:
+  - `OPENAI_API_KEY=`
+
+---
+
+## Estado actual
+
+DuocDev se encuentra como **MVP avanzado en desarrollo**, enfocado en validación académica, flujo completo de aprendizaje y preparación técnica para una arquitectura más robusta.
+
+---
+
+## Roadmap
+
+- Conectar Flutter al backend real.
+- Login de estudiantes/profesores.
+- Base de datos.
+- Subida real de PDF/DOCX/PPTX.
+- Panel web para profesores.
+- Publicación en Google Play.
+- Políticas legales y privacidad.
+
+---
+
+## Autor
+
+**Alfonso Guzmán**  
+Estudiante de Ingeniería Informática - Duoc UC
