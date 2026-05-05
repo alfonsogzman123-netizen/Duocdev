@@ -10,25 +10,46 @@ DuocDev es una app educativa inspirada en **SoloLearn, CoddyTech y Duolingo**, o
 
 ## Capturas del proyecto
 
-Las siguientes capturas corresponden al estado actual del MVP de DuocDev.
+Las siguientes capturas muestran el estado actual del MVP de **DuocDev**, incluyendo la experiencia del estudiante, la ruta de aprendizaje, el Tutor IA y el perfil.
 
-### Inicio
+<br>
 
-![Pantalla de inicio de DuocDev](docs/images/inicio.png)
+<table>
+  <tr>
+    <td align="center">
+      <strong>Inicio</strong>
+    </td>
+    <td align="center">
+      <strong>Cursos</strong>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="docs/images/inicio.png" alt="Pantalla de inicio de DuocDev" width="270"/>
+    </td>
+    <td align="center">
+      <img src="docs/images/cursos.png" alt="Ruta de cursos de DuocDev" width="270"/>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <strong>Tutor IA</strong>
+    </td>
+    <td align="center">
+      <strong>Perfil</strong>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="docs/images/tutor-ia.png" alt="Tutor IA de DuocDev" width="270"/>
+    </td>
+    <td align="center">
+      <img src="docs/images/perfil.png" alt="Perfil del estudiante en DuocDev" width="270"/>
+    </td>
+  </tr>
+</table>
 
-### Cursos
-
-![Ruta de cursos de DuocDev](docs/images/cursos.png)
-
-### Tutor IA
-
-![Tutor IA de DuocDev](docs/images/tutor-ia.png)
-
-### Perfil
-
-![Perfil del estudiante en DuocDev](docs/images/perfil.png)
-
----
+<br>
 
 ## Funcionalidades actuales
 
