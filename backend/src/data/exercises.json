@@ -66,6 +66,28 @@
     "createdAt": "2026-05-03T00:00:00.000Z"
   },
   {
+    "id": "ex_py_funciones_1",
+    "materialId": "mat_py_funciones_demo",
+    "courseId": "python",
+    "lessonId": "p5",
+    "type": "multiple_choice",
+    "difficulty": "intermediate",
+    "question": "¿Qué describe mejor a una función en Python?",
+    "options": [
+      "Un bloque reutilizable que puede recibir datos y retornar un resultado",
+      "Una carpeta oculta del proyecto",
+      "Un commit enviado a GitHub",
+      "Una consulta SQL obligatoria"
+    ],
+    "correctIndex": 0,
+    "explanation": "Las funciones agrupan lógica reutilizable y ayudan a organizar el programa.",
+    "xpReward": 35,
+    "approved": true,
+    "published": false,
+    "sourceReference": "Funciones en Python",
+    "createdAt": "2026-05-03T12:00:00.000Z"
+  },
+  {
     "id": "ex_web_roles_1",
     "materialId": "mat_web_demo",
     "courseId": "web",

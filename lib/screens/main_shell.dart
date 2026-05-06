@@ -22,6 +22,7 @@ class _MainShellState extends State<MainShell> {
         onGoToRoute: () => setState(() => page = 1),
         onGoToPractice: () => setState(() => page = 2),
         onGoToTutor: () => setState(() => page = 3),
+        onGoToProfile: () => setState(() => page = 4),
       ),
       const RouteScreen(),
       const SmartPracticeScreen(),

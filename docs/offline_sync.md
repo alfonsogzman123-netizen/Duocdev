@@ -54,6 +54,7 @@ Las tareas fallidas vuelven a ser reintentables desde el botón **Sincronizar ah
 2. Crea una tarea pendiente en la cola.
 3. Muestra un mensaje claro de modo demo/sincronización pendiente.
 4. El profesor puede seguir trabajando.
+5. La app conserva contenido visible mediante materiales y ejercicios demo realistas.
 
 ## Cuando backend vuelve
 

@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:duocdev/screens/teacher/teacher_dashboard_screen.dart';
 import 'package:duocdev/services/api_service.dart';
 import 'package:duocdev/services/exercise_generation_service.dart';
 import 'package:duocdev/services/progress_service.dart';
@@ -12,11 +13,13 @@ class HomeScreen extends StatefulWidget {
     required this.onGoToRoute,
     required this.onGoToPractice,
     required this.onGoToTutor,
+    required this.onGoToProfile,
   });
 
   final VoidCallback onGoToRoute;
   final VoidCallback onGoToPractice;
   final VoidCallback onGoToTutor;
+  final VoidCallback onGoToProfile;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -40,152 +43,155 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final practice = exerciseGenerationService.studentPracticeExercises();
+
     return SafeArea(
       child: ListView(
-        padding: const EdgeInsets.all(22),
+        padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
         children: [
-          Row(
-            children: [
-              const Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Hola, Estudiante 👋',
-                      style: TextStyle(color: Colors.white70, fontSize: 20),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      'Continúa tu ruta de programación',
-                      style: TextStyle(
-                        fontSize: 32,
-                        height: 1.1,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              if (_backendConnected != null)
-                _ConnectionPill(connected: _backendConnected!),
-            ],
+          _WelcomeHero(
+            connected: _backendConnected,
+            onStart: widget.onGoToRoute,
+            onTeacher: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const TeacherDashboardScreen()),
+            ),
           ),
           const SizedBox(height: 18),
-          const _PremiumProgressCard(),
-          const SizedBox(height: 16),
-          const _DailyMissionCard(),
-          const SizedBox(height: 22),
-          const SectionTitle('Continúa aprendiendo'),
+          const _ProgressDashboard(),
+          const SizedBox(height: 18),
+          const SectionTitle('Misiones de hoy'),
           const SizedBox(height: 12),
-          DuocCard(
-            onTap: widget.onGoToRoute,
-            radius: 24,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 54,
-                      height: 54,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF0F172A),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: const Color(0xFF334155)),
-                      ),
-                      child: const Icon(
-                        Icons.code_rounded,
-                        color: Color(0xFF22D3EE),
-                        size: 30,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    const Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Python Básico',
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
-                          Text(
-                            'Funciones, módulos y práctica guiada',
-                            style: TextStyle(color: Colors.white70),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      color: Colors.white70,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 14),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(999),
-                  child: const LinearProgressIndicator(
-                    value: 0.75,
-                    minHeight: 9,
-                    color: Color(0xFF8B5CF6),
-                    backgroundColor: Color(0xFF334155),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                const Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    '75% completado',
-                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
-                  ),
-                ),
-              ],
+          const _DailyMissions(),
+          const SizedBox(height: 22),
+          SectionTitle(
+            'Continúa aprendiendo',
+            trailing: StatusBadge(
+              label: '75%',
+              color: const Color(0xFF22D3EE),
+              icon: Icons.trending_up_rounded,
             ),
           ),
-          if (practice.isNotEmpty) ...[
-            const SizedBox(height: 22),
-            _SmartPracticeHomeCard(
-              count: practice.length,
-              onTap: widget.onGoToPractice,
-            ),
-          ],
+          const SizedBox(height: 12),
+          _ContinueLearningCard(onTap: widget.onGoToRoute),
+          const SizedBox(height: 22),
+          _SmartPracticeSpotlight(
+            count: practice.length,
+            onTap: widget.onGoToPractice,
+          ),
           const SizedBox(height: 22),
           _QuickAccessSection(
             onGoToRoute: widget.onGoToRoute,
             onGoToPractice: widget.onGoToPractice,
             onGoToTutor: widget.onGoToTutor,
+            onGoToProfile: widget.onGoToProfile,
+            onGoToTeacher: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const TeacherDashboardScreen()),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _WelcomeHero extends StatelessWidget {
+  const _WelcomeHero({
+    required this.connected,
+    required this.onStart,
+    required this.onTeacher,
+  });
+
+  final bool? connected;
+  final VoidCallback onStart;
+  final VoidCallback onTeacher;
+
+  @override
+  Widget build(BuildContext context) {
+    return HeroPanel(
+      icon: Icons.auto_awesome,
+      colors: const [Color(0xFF4C1D95), Color(0xFF0E7490), Color(0xFF0F172A)],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 54,
+                height: 54,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.14),
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(color: Colors.white24),
+                ),
+                child: const Icon(Icons.code_rounded, color: Colors.white),
+              ),
+              const SizedBox(width: 12),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'DuocDev',
+                      style: TextStyle(
+                        fontSize: 27,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    Text(
+                      'Aprende programación con práctica inteligente',
+                      style: TextStyle(color: Colors.white70, height: 1.2),
+                    ),
+                  ],
+                ),
+              ),
+              if (connected != null)
+                StatusBadge(
+                  label: connected! ? 'Backend' : 'Demo',
+                  color: connected!
+                      ? const Color(0xFF22C55E)
+                      : const Color(0xFFFB923C),
+                  icon: connected!
+                      ? Icons.cloud_done_rounded
+                      : Icons.cloud_off_rounded,
+                ),
+            ],
           ),
           const SizedBox(height: 22),
-          Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            children: const [
-              _Stat(
-                icon: Icons.local_fire_department,
-                title: 'Racha',
-                value: '7 días',
-                color: Color(0xFFFB923C),
+          const Text(
+            'Hola, Estudiante',
+            style: TextStyle(color: Colors.white70, fontSize: 18),
+          ),
+          const SizedBox(height: 6),
+          const Text(
+            'Cursos, Tutor IA y ejercicios generados desde material académico.',
+            style: TextStyle(
+              fontSize: 29,
+              height: 1.08,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          const SizedBox(height: 18),
+          const Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              _BenefitPill('Rutas guiadas', Icons.route_rounded),
+              _BenefitPill('Ejercicios inteligentes', Icons.psychology_alt),
+              _BenefitPill('Contenido de clase', Icons.school_rounded),
+            ],
+          ),
+          const SizedBox(height: 18),
+          Row(
+            children: [
+              Expanded(
+                child: PrimaryButton(label: 'Comenzar', onPressed: onStart),
               ),
-              _Stat(
-                icon: Icons.emoji_events,
-                title: 'Insignias',
-                value: '7',
-                color: Color(0xFFF59E0B),
-              ),
-              _Stat(
-                icon: Icons.auto_awesome,
-                title: 'Prácticas IA',
-                value: '4',
-                color: Color(0xFF22D3EE),
-              ),
-              _Stat(
-                icon: Icons.bar_chart_rounded,
-                title: 'Meta diaria',
-                value: '50 XP',
-                color: Color(0xFF8B5CF6),
+              const SizedBox(width: 10),
+              IconButton.filledTonal(
+                tooltip: 'Ver modo profesor',
+                onPressed: onTeacher,
+                icon: const Icon(Icons.admin_panel_settings_rounded),
               ),
             ],
           ),
@@ -195,139 +201,47 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class _QuickAccessSection extends StatelessWidget {
-  const _QuickAccessSection({
-    required this.onGoToRoute,
-    required this.onGoToPractice,
-    required this.onGoToTutor,
-  });
+class _BenefitPill extends StatelessWidget {
+  const _BenefitPill(this.label, this.icon);
 
-  final VoidCallback onGoToRoute;
-  final VoidCallback onGoToPractice;
-  final VoidCallback onGoToTutor;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SectionTitle('Acceso rápido'),
-        const SizedBox(height: 12),
-        Wrap(
-          spacing: 10,
-          runSpacing: 10,
-          children: [
-            _QuickAction(
-              icon: Icons.menu_book_rounded,
-              label: 'Cursos',
-              color: const Color(0xFF8B5CF6),
-              onTap: onGoToRoute,
-            ),
-            _QuickAction(
-              icon: Icons.psychology_alt_rounded,
-              label: 'Práctica',
-              color: const Color(0xFF22D3EE),
-              onTap: onGoToPractice,
-            ),
-            _QuickAction(
-              icon: Icons.auto_awesome,
-              label: 'Tutor IA',
-              color: const Color(0xFFFB923C),
-              onTap: onGoToTutor,
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-class _QuickAction extends StatelessWidget {
-  const _QuickAction({
-    required this.icon,
-    required this.label,
-    required this.color,
-    required this.onTap,
-  });
-
-  final IconData icon;
   final String label;
-  final Color color;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 158,
-      child: DuocCard(
-        radius: 20,
-        padding: const EdgeInsets.all(14),
-        onTap: onTap,
-        child: Row(
-          children: [
-            Icon(icon, color: color, size: 26),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                label,
-                style: const TextStyle(fontWeight: FontWeight.w800),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _ConnectionPill extends StatelessWidget {
-  const _ConnectionPill({required this.connected});
-
-  final bool connected;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
-        color: connected ? const Color(0xFF052E16) : const Color(0xFF431407),
+        color: Colors.white.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(999),
-        border: Border.all(
-          color: connected ? const Color(0xFF22C55E) : const Color(0xFFFB923C),
-        ),
+        border: Border.all(color: Colors.white24),
       ),
-      child: Text(
-        connected ? 'Conectado' : 'Modo demo',
-        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 16, color: Colors.white),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800),
+          ),
+        ],
       ),
     );
   }
 }
 
-class _PremiumProgressCard extends StatelessWidget {
-  const _PremiumProgressCard();
+class _ProgressDashboard extends StatelessWidget {
+  const _ProgressDashboard();
 
   @override
   Widget build(BuildContext context) {
     final progress = progressService.levelProgress;
-    return Container(
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        gradient: const LinearGradient(
-          colors: [Color(0xFF1E293B), Color(0xFF111827), Color(0xFF172554)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        border: Border.all(color: const Color(0xFF334155)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.35),
-            blurRadius: 26,
-            offset: const Offset(0, 12),
-          ),
-        ],
-      ),
+    final overall = progressService.overallProgress.clamp(0.18, 1.0);
+
+    return DuocCard(
+      radius: 26,
+      padding: const EdgeInsets.all(20),
       child: Row(
         children: [
           Expanded(
@@ -342,52 +256,69 @@ class _PremiumProgressCard extends StatelessWidget {
                 Text(
                   'Nivel ${progressService.level}',
                   style: const TextStyle(
-                    fontSize: 34,
-                    fontWeight: FontWeight.w800,
+                    fontSize: 35,
+                    fontWeight: FontWeight.w900,
                   ),
                 ),
                 const Text(
                   'Programador en formación',
-                  style: TextStyle(color: Color(0xFF94A3B8), fontSize: 17),
+                  style: TextStyle(color: Color(0xFF94A3B8), fontSize: 16),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 14),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(999),
                   child: LinearProgressIndicator(
                     value: progress,
-                    minHeight: 8,
+                    minHeight: 10,
                     color: const Color(0xFF22D3EE),
                     backgroundColor: const Color(0xFF334155),
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 9),
                 Text(
-                  '${progressService.xpIntoLevel} / ${ProgressService.xpPerLevel} XP hacia el próximo nivel',
-                  style: const TextStyle(color: Colors.white70, fontSize: 15),
+                  '${progressService.xpIntoLevel}/${ProgressService.xpPerLevel} XP para subir de nivel',
+                  style: const TextStyle(color: Colors.white70),
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  'Racha ${progressService.streakDays} días • Meta diaria ${ProgressService.dailyGoalXp} XP',
-                  style: const TextStyle(color: Color(0xFFCBD5E1)),
+                const SizedBox(height: 14),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    StatusBadge(
+                      label: '${progressService.streakDays} días',
+                      color: const Color(0xFFFB923C),
+                      icon: Icons.local_fire_department,
+                    ),
+                    StatusBadge(
+                      label: '${ProgressService.dailyGoalXp} XP meta',
+                      color: const Color(0xFF8B5CF6),
+                      icon: Icons.flag_rounded,
+                    ),
+                    StatusBadge(
+                      label: '${(overall * 100).round()}% ruta',
+                      color: const Color(0xFF22C55E),
+                      icon: Icons.timeline_rounded,
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
           const SizedBox(width: 16),
           SizedBox(
-            width: 94,
-            height: 94,
+            width: 98,
+            height: 98,
             child: Stack(
               alignment: Alignment.center,
               children: [
                 Transform.rotate(
                   angle: -math.pi / 2,
                   child: SizedBox(
-                    width: 94,
-                    height: 94,
+                    width: 98,
+                    height: 98,
                     child: CircularProgressIndicator(
                       value: progress,
-                      strokeWidth: 8,
+                      strokeWidth: 9,
                       color: const Color(0xFF60A5FA),
                       backgroundColor: const Color(0xFF334155),
                     ),
@@ -396,7 +327,7 @@ class _PremiumProgressCard extends StatelessWidget {
                 Text(
                   '${(progress * 100).round()}%',
                   style: const TextStyle(
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w900,
                     fontSize: 20,
                   ),
                 ),
@@ -409,101 +340,54 @@ class _PremiumProgressCard extends StatelessWidget {
   }
 }
 
-class _DailyMissionCard extends StatelessWidget {
-  const _DailyMissionCard();
+class _DailyMissions extends StatelessWidget {
+  const _DailyMissions();
 
   @override
   Widget build(BuildContext context) {
-    return DuocCard(
-      radius: 24,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Row(
-            children: [
-              Icon(Icons.flag_rounded, color: Color(0xFFFB923C)),
-              SizedBox(width: 8),
-              Text(
-                'Meta de hoy',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            progressService.dailyGoalLabel,
-            style: const TextStyle(color: Colors.white70, height: 1.35),
-          ),
-          const SizedBox(height: 12),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(999),
-            child: LinearProgressIndicator(
-              value: progressService.dailyGoalProgress,
-              minHeight: 9,
-              color: const Color(0xFFFB923C),
-              backgroundColor: const Color(0xFF334155),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            '${progressService.todayXp} / ${ProgressService.dailyGoalXp} XP completados hoy',
-            style: const TextStyle(color: Colors.white70),
-          ),
-        ],
-      ),
+    return Wrap(
+      spacing: 10,
+      runSpacing: 10,
+      children: const [
+        _MissionCard(
+          icon: Icons.menu_book_rounded,
+          title: 'Completa una lección',
+          subtitle: 'Microlearning',
+          done: true,
+          color: Color(0xFF22C55E),
+        ),
+        _MissionCard(
+          icon: Icons.quiz_rounded,
+          title: 'Resuelve 3 ejercicios',
+          subtitle: '2 de 3 listos',
+          done: false,
+          color: Color(0xFF22D3EE),
+        ),
+        _MissionCard(
+          icon: Icons.auto_awesome,
+          title: 'Pregunta al Tutor IA',
+          subtitle: 'Refuerza dudas',
+          done: false,
+          color: Color(0xFFFB923C),
+        ),
+      ],
     );
   }
 }
 
-class _SmartPracticeHomeCard extends StatelessWidget {
-  const _SmartPracticeHomeCard({required this.count, required this.onTap});
-
-  final int count;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return DuocCard(
-      radius: 24,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Row(
-            children: [
-              Icon(Icons.auto_awesome, color: Color(0xFF22D3EE)),
-              SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  'Práctica generada por profesor',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            '$count ejercicios publicados desde material académico. Practica con contenido real de clase.',
-            style: const TextStyle(color: Colors.white70, height: 1.35),
-          ),
-          const SizedBox(height: 14),
-          PrimaryButton(label: 'Practicar ahora', onPressed: onTap),
-        ],
-      ),
-    );
-  }
-}
-
-class _Stat extends StatelessWidget {
-  const _Stat({
+class _MissionCard extends StatelessWidget {
+  const _MissionCard({
     required this.icon,
     required this.title,
-    required this.value,
+    required this.subtitle,
+    required this.done,
     required this.color,
   });
 
   final IconData icon;
   final String title;
-  final String value;
+  final String subtitle;
+  final bool done;
   final Color color;
 
   @override
@@ -516,16 +400,211 @@ class _Stat extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, color: color, size: 30),
-            const SizedBox(height: 8),
-            Text(
-              value,
-              style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+            Row(
+              children: [
+                Icon(icon, color: color),
+                const Spacer(),
+                Icon(
+                  done
+                      ? Icons.check_circle_rounded
+                      : Icons.radio_button_unchecked,
+                  color: done ? const Color(0xFF22C55E) : Colors.white38,
+                  size: 20,
+                ),
+              ],
             ),
-            Text(title, style: const TextStyle(color: Colors.white70)),
+            const SizedBox(height: 10),
+            Text(
+              title,
+              style: const TextStyle(fontWeight: FontWeight.w900, height: 1.15),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              subtitle,
+              style: const TextStyle(color: Colors.white70, fontSize: 12),
+            ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _ContinueLearningCard extends StatelessWidget {
+  const _ContinueLearningCard({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return DuocCard(
+      radius: 24,
+      onTap: onTap,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 58,
+                height: 58,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF8B5CF6), Color(0xFF22D3EE)],
+                  ),
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                child: const Icon(Icons.code_rounded, color: Colors.white),
+              ),
+              const SizedBox(width: 12),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Python Básico',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    Text(
+                      'Última lección: Funciones y módulos',
+                      style: TextStyle(color: Colors.white70),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: Colors.white70,
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(999),
+            child: const LinearProgressIndicator(
+              value: 0.75,
+              minHeight: 10,
+              color: Color(0xFF8B5CF6),
+              backgroundColor: Color(0xFF334155),
+            ),
+          ),
+          const SizedBox(height: 10),
+          const Text(
+            'Continúa con una sesión corta y gana XP para mantener tu racha.',
+            style: TextStyle(color: Colors.white70, height: 1.35),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SmartPracticeSpotlight extends StatelessWidget {
+  const _SmartPracticeSpotlight({required this.count, required this.onTap});
+
+  final int count;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return HeroPanel(
+      icon: Icons.psychology_alt_rounded,
+      colors: const [Color(0xFF164E63), Color(0xFF1E1B4B), Color(0xFF0F172A)],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const StatusBadge(
+            label: 'Práctica inteligente',
+            color: Color(0xFF22D3EE),
+            icon: Icons.auto_awesome,
+          ),
+          const SizedBox(height: 12),
+          const Text(
+            'Ejercicios generados desde material docente',
+            style: TextStyle(fontSize: 25, fontWeight: FontWeight.w900),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            count == 0
+                ? 'Usa contenido demo mientras el profesor publica nuevas actividades.'
+                : '$count ejercicios publicados para practicar con contexto real de clase.',
+            style: const TextStyle(color: Colors.white70, height: 1.35),
+          ),
+          const SizedBox(height: 16),
+          PrimaryButton(label: 'Practicar ahora', onPressed: onTap),
+        ],
+      ),
+    );
+  }
+}
+
+class _QuickAccessSection extends StatelessWidget {
+  const _QuickAccessSection({
+    required this.onGoToRoute,
+    required this.onGoToPractice,
+    required this.onGoToTutor,
+    required this.onGoToProfile,
+    required this.onGoToTeacher,
+  });
+
+  final VoidCallback onGoToRoute;
+  final VoidCallback onGoToPractice;
+  final VoidCallback onGoToTutor;
+  final VoidCallback onGoToProfile;
+  final VoidCallback onGoToTeacher;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SectionTitle('Acceso rápido'),
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 10,
+          runSpacing: 10,
+          children: [
+            MetricTile(
+              icon: Icons.route_rounded,
+              label: 'Cursos',
+              value: 'Ruta',
+              color: const Color(0xFF8B5CF6),
+              onTap: onGoToRoute,
+            ),
+            MetricTile(
+              icon: Icons.psychology_alt_rounded,
+              label: 'Práctica',
+              value: 'IA',
+              color: const Color(0xFF22D3EE),
+              onTap: onGoToPractice,
+            ),
+            MetricTile(
+              icon: Icons.auto_awesome,
+              label: 'Tutor IA',
+              value: 'Ayuda',
+              color: const Color(0xFFFB923C),
+              onTap: onGoToTutor,
+            ),
+            MetricTile(
+              icon: Icons.person_rounded,
+              label: 'Perfil',
+              value: 'XP',
+              color: const Color(0xFF22C55E),
+              onTap: onGoToProfile,
+            ),
+            MetricTile(
+              icon: Icons.admin_panel_settings_rounded,
+              label: 'Panel profesor',
+              value: 'Docente',
+              color: const Color(0xFFF472B6),
+              onTap: onGoToTeacher,
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

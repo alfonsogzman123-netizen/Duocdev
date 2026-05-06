@@ -32,6 +32,21 @@ final demoMaterials = [
     status: MaterialStatus.processed,
   ),
   AcademicMaterial(
+    id: 'mat_py_funciones',
+    title: 'Funciones en Python',
+    subject: 'Python Básico',
+    courseId: 'python',
+    unitName: 'Funciones',
+    teacherName: 'Profesor DuocDev',
+    createdAt: DateTime(2026, 5, 2),
+    sourceType: MaterialSourceType.text,
+    rawText:
+        'Una función agrupa instrucciones reutilizables. Recibe parámetros, ejecuta un proceso y puede retornar un resultado con return.',
+    summary: 'Funciones, parámetros y retorno de valores en Python.',
+    tags: ['python', 'funciones', 'return'],
+    status: MaterialStatus.processed,
+  ),
+  AcademicMaterial(
     id: 'mat_web',
     title: 'HTML, CSS y JavaScript inicial',
     subject: 'Desarrollo Web',

@@ -30,6 +30,21 @@
     "createdAt": "2026-05-03T00:00:00.000Z"
   },
   {
+    "id": "mat_py_funciones_demo",
+    "title": "Funciones en Python",
+    "subject": "Python Básico",
+    "courseId": "python",
+    "unitName": "Funciones",
+    "teacherName": "Profesor DuocDev",
+    "rawText": "Una función permite agrupar instrucciones reutilizables bajo un nombre. Puede recibir parámetros, ejecutar un proceso y devolver un resultado con return. Diseñar funciones pequeñas facilita probar el código, explicar la solución y evitar duplicación.",
+    "tags": [
+      "python",
+      "funciones",
+      "return"
+    ],
+    "createdAt": "2026-05-03T12:00:00.000Z"
+  },
+  {
     "id": "mat_web_demo",
     "title": "Estructura inicial HTML, CSS y JavaScript",
     "subject": "Desarrollo Web",
