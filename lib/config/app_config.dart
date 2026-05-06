@@ -1,4 +1,5 @@
 class AppConfig {
-  static const openAIApiKey = String.fromEnvironment('OPENAI_API_KEY');
-  static bool get hasApiKey => openAIApiKey.trim().isNotEmpty;
+  static const appName = 'DuocDev';
+  static const studentName = 'Estudiante';
+  static const institution = 'Duoc UC';
 }

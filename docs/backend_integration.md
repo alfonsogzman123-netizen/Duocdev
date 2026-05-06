@@ -1,74 +1,108 @@
-# Integración Flutter ↔ Backend (MVP híbrido)
+# Integración Flutter ↔ Backend
 
 ## Objetivo
-Conectar Flutter con backend real sin perder operatividad cuando el servidor está apagado.
+
+Conectar Flutter con un backend propio sin perder el modo demo/offline cuando el servidor no está disponible.
 
 ## Arquitectura
-Flutter → ApiService → Backend Express → JSON local/demo → IA futura.
+
+`Flutter → ApiService → Backend Express → servicios de dominio → JSON local → IA demo/OpenAI backend`
+
+Flutter nunca debe llamar OpenAI directamente ni guardar claves.
 
 ## Configuración de URL
-- Default emulador Android: `http://10.0.2.2:3000`
-- Override:
+
+URL por defecto para Android Emulator:
+
+```text
+http://10.0.2.2:3000
+```
+
+Override:
+
 ```bash
 flutter run --dart-define=BACKEND_BASE_URL=http://10.0.2.2:3000
 ```
 
-## Cómo correr backend
+Para dispositivo físico, reemplazar por la IP local del computador donde corre backend.
+
+## Ejecutar backend
+
+Windows:
+
 ```bash
 cd backend
 npm.cmd install
 npm.cmd run dev
 ```
+
 Linux/macOS:
+
 ```bash
 cd backend
 npm install
 npm run dev
 ```
 
-## Cómo probar backend
-- `http://localhost:3000/health`
-- `http://localhost:3000/materials`
+## Endpoints
 
-## Servicios Flutter conectados
-- ApiService
-- MaterialService
-- ExerciseGenerationService
-- TeacherService
+- `GET /health`
+- `GET /materials`
+- `POST /materials`
+- `GET /materials/:id`
+- `POST /materials/:id/generate-exercises`
+- `GET /exercises`
+- `POST /exercises/:id/approve`
+- `POST /exercises/:id/publish`
+- `GET /courses/:courseId/exercises`
+- `GET /ai/info`
+- `POST /ai/tutor`
 
-## Endpoints usados
-- GET /health
-- GET /materials
-- POST /materials
-- GET /materials/:id
-- POST /materials/:id/generate-exercises
-- GET /exercises
-- POST /exercises/:id/approve
-- POST /exercises/:id/publish
-- GET /courses/:courseId/exercises
+## Health
 
-## Fallback demo
-- Si backend falla, la app usa datos locales.
-- Si falla generación remota, se genera contenido demo local.
-- Profesor y estudiante mantienen flujo funcional.
+Respuesta esperada:
 
-## Modo offline y sincronización pendiente
-- Se cachean materiales y ejercicios en `LocalCacheService` (memoria).
-- Acciones fallidas se agregan a `SyncQueueService` como tareas pendientes.
-- Panel profesor muestra conteo de pendientes y botón "Sincronizar ahora".
-- Al reconectar backend, se intenta sincronizar tareas (material, approve, publish).
-- Limitación actual: cola en memoria (no persistente al cerrar app).
-- Mejora futura: persistencia local con Hive/SQLite + estrategia de reintentos.
+```json
+{
+  "ok": true,
+  "service": "DuocDev Backend"
+}
+```
 
-## Limitaciones actuales
-- Backend usa JSON local.
-- Sin login real.
-- Sin base de datos externa.
-- Sin subida real de PDF/DOCX/PPTX.
+## Tutor IA
 
-## Próximos pasos
-- Base de datos real.
-- Login y roles reales.
-- Subida de archivos académicos reales.
-- IA solo desde backend seguro.
-- Panel web de profesor.
+`POST /ai/tutor`
+
+Body:
+
+```json
+{
+  "question": "Explícame una condición en Python",
+  "context": "Lección actual o material académico"
+}
+```
+
+Respuesta:
+
+```json
+{
+  "mode": "demo",
+  "answer": "Respuesta educativa..."
+}
+```
+
+Si `OPENAI_API_KEY` está vacío, el backend responde en modo demo. Si existe clave y falla la llamada, responde con `demo_fallback`.
+
+## Fallback
+
+- Si backend falla, `MaterialService` y `ExerciseGenerationService` usan cache local.
+- Si falla generación remota, se crean ejercicios demo locales.
+- Si falla una acción docente, se agrega una tarea a `SyncQueueService`.
+
+## Limitaciones
+
+- Persistencia en JSON local.
+- Sin autenticación.
+- Sin base de datos.
+- Sin subida real de archivos.
+- Sin sincronización persistente al cerrar la app.

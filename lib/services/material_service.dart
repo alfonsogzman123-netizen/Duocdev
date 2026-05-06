@@ -40,7 +40,9 @@ class MaterialService {
   Future<void> saveMaterial(AcademicMaterial material) async {
     try {
       await apiService.post('/materials', {
+        'id': material.id,
         'title': material.title,
+        'subject': material.subject,
         'courseId': material.courseId,
         'unitName': material.unitName,
         'teacherName': material.teacherName,
@@ -56,7 +58,9 @@ class MaterialService {
           id: 'sync_mat_${DateTime.now().millisecondsSinceEpoch}',
           type: SyncTaskType.createMaterial,
           payload: {
+            'id': material.id,
             'title': material.title,
+            'subject': material.subject,
             'courseId': material.courseId,
             'unitName': material.unitName,
             'teacherName': material.teacherName,

@@ -1,6 +1,5 @@
 import 'dart:math' as math;
 
-import 'package:duocdev/screens/smart_practice_screen.dart';
 import 'package:duocdev/services/api_service.dart';
 import 'package:duocdev/services/exercise_generation_service.dart';
 import 'package:duocdev/services/progress_service.dart';
@@ -8,9 +7,16 @@ import 'package:duocdev/widgets/app_cards.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key, required this.onGoToRoute});
+  const HomeScreen({
+    super.key,
+    required this.onGoToRoute,
+    required this.onGoToPractice,
+    required this.onGoToTutor,
+  });
 
   final VoidCallback onGoToRoute;
+  final VoidCallback onGoToPractice;
+  final VoidCallback onGoToTutor;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -99,7 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Python',
+                            'Python Básico',
                             style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.w800,
@@ -143,12 +149,15 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 22),
             _SmartPracticeHomeCard(
               count: practice.length,
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const SmartPracticeScreen()),
-              ).then((_) => setState(() {})),
+              onTap: widget.onGoToPractice,
             ),
           ],
+          const SizedBox(height: 22),
+          _QuickAccessSection(
+            onGoToRoute: widget.onGoToRoute,
+            onGoToPractice: widget.onGoToPractice,
+            onGoToTutor: widget.onGoToTutor,
+          ),
           const SizedBox(height: 22),
           Wrap(
             spacing: 10,
@@ -181,6 +190,91 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _QuickAccessSection extends StatelessWidget {
+  const _QuickAccessSection({
+    required this.onGoToRoute,
+    required this.onGoToPractice,
+    required this.onGoToTutor,
+  });
+
+  final VoidCallback onGoToRoute;
+  final VoidCallback onGoToPractice;
+  final VoidCallback onGoToTutor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SectionTitle('Acceso rápido'),
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 10,
+          runSpacing: 10,
+          children: [
+            _QuickAction(
+              icon: Icons.menu_book_rounded,
+              label: 'Cursos',
+              color: const Color(0xFF8B5CF6),
+              onTap: onGoToRoute,
+            ),
+            _QuickAction(
+              icon: Icons.psychology_alt_rounded,
+              label: 'Práctica',
+              color: const Color(0xFF22D3EE),
+              onTap: onGoToPractice,
+            ),
+            _QuickAction(
+              icon: Icons.auto_awesome,
+              label: 'Tutor IA',
+              color: const Color(0xFFFB923C),
+              onTap: onGoToTutor,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _QuickAction extends StatelessWidget {
+  const _QuickAction({
+    required this.icon,
+    required this.label,
+    required this.color,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final Color color;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 158,
+      child: DuocCard(
+        radius: 20,
+        padding: const EdgeInsets.all(14),
+        onTap: onTap,
+        child: Row(
+          children: [
+            Icon(icon, color: color, size: 26),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                label,
+                style: const TextStyle(fontWeight: FontWeight.w800),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

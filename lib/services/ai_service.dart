@@ -1,42 +1,33 @@
-import 'dart:convert';
-
-import 'package:duocdev/config/app_config.dart';
-import 'package:http/http.dart' as http;
+import 'package:duocdev/services/api_service.dart';
 
 class AIService {
-  static const _systemPrompt =
-      'Eres Tutor IA de DuocDev. Responde breve, claro, con ejemplo simple y opcional mini ejercicio.';
+  String lastMode = 'demo';
 
   Future<String> askTutor({
     required String question,
     required String context,
   }) async {
-    if (!AppConfig.hasApiKey) {
-      return 'Modo demo activo. [$context] Para "$question": comienza separando el problema en pasos, prueba un ejemplo mínimo y valida el resultado esperado. Después intenta resolver una variación sin mirar la respuesta.';
+    try {
+      final data =
+          await apiService.post('/ai/tutor', {
+                'question': question,
+                'context': context,
+              })
+              as Map<String, dynamic>;
+      lastMode = (data['mode'] as String?) ?? 'backend';
+      final answer = data['answer'] as String?;
+      if (answer != null && answer.trim().isNotEmpty) return answer.trim();
+    } catch (_) {
+      lastMode = 'demo_local';
     }
 
-    final response = await http.post(
-      Uri.parse('https://api.openai.com/v1/responses'),
-      headers: {
-        'Authorization': 'Bearer ${AppConfig.openAIApiKey}',
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
-        'model': 'gpt-4.1-mini',
-        'input': [
-          {'role': 'system', 'content': _systemPrompt},
-          {'role': 'user', 'content': 'Contexto: $context\nDuda: $question'},
-        ],
-      }),
-    );
+    return _demoAnswer(question: question, context: context);
+  }
 
-    if (response.statusCode >= 400) {
-      throw Exception('Error API (${response.statusCode})');
-    }
-
-    final data = jsonDecode(response.body) as Map<String, dynamic>;
-    final text = data['output_text'];
-    if (text is String && text.isNotEmpty) return text;
-    return 'No se recibió respuesta. Intenta nuevamente.';
+  String _demoAnswer({required String question, required String context}) {
+    final focus = context.length > 180
+        ? '${context.substring(0, 180)}...'
+        : context;
+    return 'Modo demo activo. Contexto: $focus\n\nPara "$question": separa el problema en pasos, prueba un ejemplo mínimo y valida el resultado esperado. Luego intenta una variación: cambia un dato de entrada y explica por qué cambia la salida.';
   }
 }

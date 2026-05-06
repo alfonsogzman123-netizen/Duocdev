@@ -73,8 +73,17 @@ class ApiService {
 
   dynamic _parse(http.Response response) {
     if (response.statusCode >= 400) {
+      String message = 'Error del backend (${response.statusCode}).';
+      try {
+        final data = jsonDecode(response.body);
+        if (data is Map<String, dynamic> && data['error'] is String) {
+          message = data['error'] as String;
+        }
+      } catch (_) {
+        // Mantiene el mensaje generico si el backend no envio JSON.
+      }
       throw ApiException(
-        'Error del backend (${response.statusCode}).',
+        message,
         statusCode: response.statusCode,
         type: ApiErrorType.backend,
       );

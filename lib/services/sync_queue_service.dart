@@ -4,9 +4,16 @@ class SyncQueueService {
   final List<SyncTask> _tasks = [];
 
   void addTask(SyncTask task) => _tasks.insert(0, task);
-  List<SyncTask> getPendingTasks() =>
-      _tasks.where((t) => t.status == SyncTaskStatus.pending).toList();
+  List<SyncTask> getPendingTasks() => _tasks
+      .where(
+        (t) =>
+            t.status == SyncTaskStatus.pending ||
+            t.status == SyncTaskStatus.failed,
+      )
+      .toList();
   int get pendingCount => getPendingTasks().length;
+  int get failedCount =>
+      _tasks.where((t) => t.status == SyncTaskStatus.failed).length;
 
   void markSynced(String id) {
     final i = _tasks.indexWhere((t) => t.id == id);

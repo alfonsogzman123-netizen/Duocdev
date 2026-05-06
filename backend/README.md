@@ -35,6 +35,8 @@ Respuesta esperada:
 - `POST /exercises/:id/approve`
 - `POST /exercises/:id/publish`
 - `GET /courses/:courseId/exercises`
+- `GET /ai/info`
+- `POST /ai/tutor`
 
 ## Ejemplos curl
 
@@ -63,6 +65,13 @@ Aprobar/publicar ejercicio:
 ```bash
 curl -X POST http://localhost:3000/exercises/EXERCISE_ID/approve
 curl -X POST http://localhost:3000/exercises/EXERCISE_ID/publish
+```
+
+Tutor IA demo/API:
+```bash
+curl -X POST http://localhost:3000/ai/tutor \
+  -H "Content-Type: application/json" \
+  -d '{"question":"Explícame un if en Python","context":"Lección de condicionales"}'
 ```
 
 ## Seguridad

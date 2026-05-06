@@ -15,6 +15,15 @@ app.use(materialsRoutes);
 app.use(exercisesRoutes);
 app.use(aiRoutes);
 
+app.use((_req, res) => {
+  res.status(404).json({ error: 'Ruta no encontrada' });
+});
+
+app.use((err, _req, res, _next) => {
+  console.error(err);
+  res.status(500).json({ error: 'Error interno del backend' });
+});
+
 app.listen(env.port, () => {
   console.log(`DuocDev Backend running on http://localhost:${env.port}`);
 });

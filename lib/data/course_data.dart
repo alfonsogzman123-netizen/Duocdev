@@ -67,7 +67,7 @@ final List<Course> courses = [
   ),
   Course(
     id: 'python',
-    title: 'Python',
+    title: 'Python Básico',
     level: 'Nivel 2',
     description:
         'Sintaxis clara y productividad para resolver problemas reales.',

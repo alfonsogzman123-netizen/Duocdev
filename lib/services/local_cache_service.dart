@@ -1,11 +1,12 @@
+import 'package:duocdev/data/demo_generated_exercise_data.dart';
 import 'package:duocdev/data/demo_material_data.dart';
 import 'package:duocdev/models/academic_material.dart';
 import 'package:duocdev/models/generated_exercise.dart';
 
 class LocalCacheService {
-  // TODO: reemplazar por Hive/SQLite/SharedPreferences para persistencia real.
+  // Persistencia real futura: Hive/SQLite/SharedPreferences.
   final List<AcademicMaterial> _materials = [...demoMaterials];
-  final List<GeneratedExercise> _exercises = [];
+  final List<GeneratedExercise> _exercises = [...demoGeneratedExercises];
 
   void cacheMaterials(List<AcademicMaterial> materials) {
     _materials

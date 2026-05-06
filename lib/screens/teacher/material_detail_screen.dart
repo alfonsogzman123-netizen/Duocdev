@@ -66,6 +66,19 @@ class MaterialDetailScreen extends StatelessWidget {
               ),
             ),
           ),
+          const SizedBox(height: 8),
+          OutlinedButton.icon(
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => GeneratedExercisesScreen(
+                  preselectedMaterialId: material.id,
+                ),
+              ),
+            ),
+            icon: const Icon(Icons.fact_check_rounded),
+            label: const Text('Ver ejercicios asociados'),
+          ),
         ],
       ),
     );

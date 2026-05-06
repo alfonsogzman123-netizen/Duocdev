@@ -1,11 +1,11 @@
 class StorageService {
   Future<String> uploadFilePlaceholder() async {
-    // TODO backend/Supabase/Firebase storage
+    // MVP: la subida real se implementara con almacenamiento propio/backend.
     return 'demo://uploaded-file';
   }
 
   Future<String> extractTextPlaceholder() async {
-    // TODO extracción real de PDF/DOCX/PPTX
-    return 'Texto extraído demo';
+    // MVP: la extraccion real de PDF/DOCX/PPTX queda para produccion.
+    return 'Texto extraido demo';
   }
 }

@@ -78,6 +78,16 @@ class ProgressService {
       description: 'Completa práctica generada desde una guía docente.',
       earned: generatedExercisesCompleted.length >= 3,
     ),
+    BadgeProgress(
+      title: 'Práctica inteligente completada',
+      description: 'Resuelve al menos un ejercicio publicado por profesor.',
+      earned: generatedExercisesCompleted.isNotEmpty,
+    ),
+    const BadgeProgress(
+      title: 'Tutor IA usado',
+      description: 'Apóyate con el tutor para estudiar un concepto.',
+      earned: true,
+    ),
   ];
 
   bool isCompleted(String lessonKey) => completedLessons.contains(lessonKey);

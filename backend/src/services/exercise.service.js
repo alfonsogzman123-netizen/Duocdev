@@ -16,8 +16,14 @@ async function ensureFile() {
 
 async function readExercises() {
   await ensureFile();
-  const raw = await fs.readFile(exercisesPath, 'utf-8');
-  return JSON.parse(raw);
+  try {
+    const raw = await fs.readFile(exercisesPath, 'utf-8');
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (_) {
+    await fs.writeFile(exercisesPath, '[]');
+    return [];
+  }
 }
 
 async function writeExercises(exercises) {
@@ -31,31 +37,36 @@ export async function getExercises() {
 
 export async function saveGeneratedExercises(items) {
   const exercises = await readExercises();
-  exercises.unshift(...items);
-  await writeExercises(exercises);
+  const next = [...items, ...exercises];
+  const deduped = next.filter(
+    (exercise, index, list) => list.findIndex((item) => item.id === exercise.id) === index,
+  );
+  await writeExercises(deduped);
   return items;
 }
 
 export async function approveExercise(id) {
   const exercises = await readExercises();
-  const i = exercises.findIndex((e) => e.id === id);
-  if (i < 0) return null;
-  exercises[i].approved = true;
+  const index = exercises.findIndex((exercise) => exercise.id === id);
+  if (index < 0) return null;
+  exercises[index].approved = true;
   await writeExercises(exercises);
-  return exercises[i];
+  return exercises[index];
 }
 
 export async function publishExercise(id) {
   const exercises = await readExercises();
-  const i = exercises.findIndex((e) => e.id === id);
-  if (i < 0) return null;
-  exercises[i].approved = true;
-  exercises[i].published = true;
+  const index = exercises.findIndex((exercise) => exercise.id === id);
+  if (index < 0) return null;
+  exercises[index].approved = true;
+  exercises[index].published = true;
   await writeExercises(exercises);
-  return exercises[i];
+  return exercises[index];
 }
 
 export async function getPublishedExercisesByCourse(courseId) {
   const exercises = await readExercises();
-  return exercises.filter((e) => e.courseId === courseId && e.published);
+  return exercises.filter(
+    (exercise) => exercise.courseId === courseId && exercise.published,
+  );
 }

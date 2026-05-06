@@ -1,72 +1,99 @@
 # Estrategia de producto DuocDev
 
-## Problema que resuelve
+## Problema
 
-Los estudiantes de Ingeniería Informática practican con ejercicios genéricos que muchas veces no se conectan con la guía, clase o evaluación real del semestre. Los profesores, por otro lado, tienen material valioso pero no siempre cuentan con tiempo para transformarlo en práctica personalizada, revisable y medible.
+Los estudiantes de Ingeniería Informática suelen practicar con ejercicios genéricos que no siempre están alineados con la guía, clase o evaluación real del semestre. Al mismo tiempo, los profesores tienen material académico valioso, pero no siempre cuentan con tiempo para convertirlo en práctica personalizada, revisable y medible.
 
-DuocDev conecta esas dos necesidades: convierte material académico real en ejercicios que el profesor puede revisar y publicar, y entrega al estudiante práctica contextual con progreso, feedback y apoyo del Tutor IA.
+## Solución
 
-## Por qué no es una copia de SoloLearn, Duolingo o Coddy
+DuocDev transforma material académico real en práctica móvil:
 
-DuocDev toma ideas útiles de esas apps, como microlecciones, progreso visible, feedback rápido y motivación diaria. La diferencia central es que no depende solo de contenido genérico prearmado. La plataforma nace desde el material de clase del profesor y lo convierte en práctica alineada al curso.
+`Profesor sube material → IA/demo genera ejercicios → profesor revisa/publica → estudiante practica → la app mide progreso, XP, racha y desempeño.`
 
-Esto cambia el foco: no es una app para aprender programación de forma aislada, sino una capa de práctica inteligente sobre el proceso académico real de Duoc UC.
+El MVP mantiene modo demo/offline para que el flujo pueda presentarse incluso sin infraestructura completa.
 
-## Diferenciador principal
+## Diferenciador
 
-El flujo distintivo es:
+DuocDev no es una biblioteca genérica de cursos. Su valor está en conectar práctica, material docente y revisión humana. La IA acelera la creación inicial, pero el profesor mantiene control editorial antes de publicar al estudiante.
 
-`Profesor sube material académico real → IA genera ejercicios → profesor revisa/publica → estudiante practica contenido personalizado → progreso y gamificación se actualizan`
+## Comparación con apps de referencia
 
-Ese ciclo hace que DuocDev sea más útil que una biblioteca de cursos genéricos, porque adapta la práctica a lo que efectivamente se enseñó.
+- SoloLearn: inspira microlecciones, quizzes rápidos, rutas y perfil de progreso.
+- Coddy/CoddyTech: inspira práctica técnica guiada y foco en programación.
+- Duolingo: inspira racha, XP, metas diarias, feedback inmediato y motivación frecuente.
+
+DuocDev toma esos patrones, pero los orienta a una experiencia académica de Duoc UC: contenido contextual, rol profesor y práctica basada en material real.
 
 ## Flujo estudiante
 
-El estudiante entra a un dashboard de aprendizaje con nivel, XP, racha, meta diaria y continuidad de curso. Desde ahí puede avanzar por la ruta de programación, completar microlecciones, responder desafíos con feedback inmediato y practicar ejercicios generados desde material publicado por profesor.
-
-La experiencia esperada es breve, clara y accionable: aprender un concepto, probarlo, recibir feedback y seguir practicando.
+1. Inicio con saludo, nivel, XP, racha, meta diaria y continuidad.
+2. Ruta con cursos ordenados por nivel, progreso, estados y práctica docente disponible.
+3. Curso con resumen, lecciones y ejercicios publicados.
+4. Lección con objetivo, explicación, ejemplo, tip docente y acceso al Tutor IA.
+5. Desafío con alternativas, feedback inmediato, pista y XP.
+6. Resultado con progreso, motivación, continuidad y retorno seguro.
+7. Práctica inteligente con ejercicios revisados/publicados o fallback demo.
+8. Perfil con carrera, Duoc UC, nivel, XP, progreso e insignias.
 
 ## Flujo profesor
 
-El profesor accede desde el modo profesor, carga material académico, genera ejercicios, revisa la calidad de cada pregunta, aprueba y publica. El panel docente muestra estado del backend, pendientes de sincronización, métricas de materiales y ejercicios, y acciones rápidas para continuar el flujo.
-
-El banco de ejercicios funciona como espacio de control editorial: ningún ejercicio generado debería llegar al estudiante sin revisión docente.
+1. Perfil → Entrar como profesor.
+2. Panel Profesor con estado de backend, sincronización, métricas y acciones rápidas.
+3. Subir material como texto académico.
+4. Generar ejercicios desde material.
+5. Revisar/editar pregunta, alternativas, respuesta correcta, explicación y XP.
+6. Aprobar.
+7. Publicar.
+8. El estudiante practica ejercicios publicados.
 
 ## Rol de IA
 
-La IA cumple dos roles:
+La IA cumple dos funciones:
 
-- Apoyar al profesor en la generación inicial de ejercicios desde material académico.
-- Apoyar al estudiante como Tutor IA contextual con modos de pregunta general, material académico, lección actual y generación de ejemplos.
+- Generar ejercicios iniciales desde material académico.
+- Responder dudas del estudiante como Tutor IA contextual.
 
-La IA no reemplaza la práctica ni la revisión docente. Acelera la creación de actividades y acompaña la comprensión.
+Regla de producto: la IA no reemplaza al profesor ni a la práctica. El profesor revisa/publica y el estudiante aprende practicando.
 
 ## Rol del backend
 
-El backend Node.js/Express sostiene el MVP con endpoints para salud, materiales, generación de ejercicios, aprobación y publicación. Hoy persiste en JSON local para mantener velocidad de iteración, pero la arquitectura deja preparado el camino hacia base de datos, autenticación y almacenamiento real.
+El backend Node.js/Express sostiene:
 
-Flutter consume el backend por `ApiService` y mantiene fallback local cuando el servidor no está disponible.
+- materiales;
+- ejercicios generados;
+- aprobación y publicación;
+- Tutor IA seguro;
+- fallback demo si no existe `OPENAI_API_KEY`;
+- persistencia JSON local para MVP.
 
-## Modo offline
+Flutter se comunica con `ApiService` y usa cache local cuando el backend no está disponible.
 
-El modo offline/demo es parte de la estrategia del MVP. Permite que estudiante y profesor sigan probando el flujo sin depender de infraestructura completa. Cuando una acción docente falla contra backend, se agrega a la cola de sincronización para reintentar luego.
+## Roadmap recomendado
 
-La limitación actual es que la cola vive en memoria. La siguiente evolución debe persistirla localmente.
+### Fase 1: MVP Flutter + backend + IA demo
 
-## Roadmap de producto
+Estado actual: app móvil, panel profesor, práctica inteligente, Tutor IA vía backend/fallback y persistencia JSON.
 
-1. Persistencia local para progreso, cola offline y práctica completada.
-2. Base de datos real para materiales, ejercicios y publicaciones.
-3. Login con roles estudiante/profesor.
-4. Subida real de PDF, DOCX y PPTX.
-5. IA generativa solo desde backend seguro.
-6. Analítica docente por curso, unidad y dificultad.
-7. Recomendaciones adaptativas por desempeño.
-8. Panel web profesor para revisión masiva.
-9. Publicación móvil con políticas de privacidad y seguridad.
+### Fase 2: Base de datos real
 
-## Qué lo hace superior a una app educativa común
+Migrar materiales, ejercicios, progreso, publicaciones y cola a PostgreSQL u otra base administrada.
 
-DuocDev combina aprendizaje móvil, feedback inmediato y gamificación, pero agrega una capa académica propia: el profesor puede convertir su material en práctica revisada y medible. Eso permite contenido más pertinente, más confianza docente y una experiencia estudiante que no se siente desconectada de la sala de clases.
+### Fase 3: Login y roles
 
-La meta no es competir solo por tener más ejercicios, sino por tener ejercicios más relevantes.
+Agregar autenticación, autorización y separación real estudiante/profesor.
+
+### Fase 4: Subida de archivos
+
+Permitir PDF, DOCX y PPTX; extraer texto; validar tamaño, tipo y seguridad.
+
+### Fase 5: IA real con material indexado
+
+Procesar material, generar embeddings/búsqueda contextual y responder desde backend con trazabilidad.
+
+### Fase 6: Panel web profesor
+
+Crear revisión masiva, métricas docentes, gestión por curso y publicación granular.
+
+### Fase 7: Publicación
+
+Preparar Google Play, políticas, términos, privacidad, monitoreo, CI/CD y soporte.
