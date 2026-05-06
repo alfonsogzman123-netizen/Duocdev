@@ -58,13 +58,18 @@ Las siguientes capturas muestran el estado actual del MVP de **DuocDev**, incluy
 ## Funcionalidades actuales
 
 - Dashboard estudiante con nivel, XP, racha, meta diaria y continuidad de curso.
-- Ruta de cursos: Lógica de Programación, Python Básico, Git y GitHub, Desarrollo Web, Java, SQL y C++ próximamente.
+- Bienvenida integrada con propuesta de valor, beneficios y acceso a modo profesor.
+- Home premium tipo dashboard con hero visual, misiones diarias y accesos rápidos.
+- Ruta de cursos: Lógica de Programación, Python Básico, Git y GitHub, Desarrollo Web, SQL, Java y C++ próximamente.
+- Roadmap visual de cursos con dificultad, estados, XP estimado y práctica inteligente disponible.
 - Microlecciones con objetivo, explicación, ejemplo de código, tip docente y desafío.
 - Desafíos con feedback inmediato, XP y resultado.
-- Práctica inteligente con ejercicios publicados por profesor y fallback demo.
+- Resultado gamificado con XP, racha, progreso de nivel e insignia demo.
+- Práctica inteligente con filtros, ejercicios publicados por profesor y fallback demo.
 - Perfil con progreso, carrera, Duoc UC, insignias y acceso a modo profesor.
 - Tutor IA contextual con modo demo/API seguro vía backend.
-- Panel profesor con estado backend, métricas, materiales, banco de ejercicios y sincronización.
+- Perfil premium con resumen de cursos, lecciones, desafíos, práctica IA e insignias.
+- Panel profesor profesional con estado backend, sync, métricas, materiales y acciones rápidas.
 - Carga de material académico como texto.
 - Generación de ejercicios desde material, aprobación y publicación.
 - Backend Node.js/Express con persistencia JSON local.

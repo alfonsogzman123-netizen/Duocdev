@@ -98,6 +98,7 @@ Si `OPENAI_API_KEY` está vacío, el backend responde en modo demo. Si existe cl
 - Si backend falla, `MaterialService` y `ExerciseGenerationService` usan cache local.
 - Si falla generación remota, se crean ejercicios demo locales.
 - Si falla una acción docente, se agrega una tarea a `SyncQueueService`.
+- La UI muestra estado conectado/demo en Home, Tutor IA y Panel Profesor.
 
 ## Limitaciones
 

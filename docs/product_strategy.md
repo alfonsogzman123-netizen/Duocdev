@@ -10,7 +10,7 @@ DuocDev transforma material académico real en práctica móvil:
 
 `Profesor sube material → IA/demo genera ejercicios → profesor revisa/publica → estudiante practica → la app mide progreso, XP, racha y desempeño.`
 
-El MVP mantiene modo demo/offline para que el flujo pueda presentarse incluso sin infraestructura completa.
+El MVP mantiene modo demo/offline para que el flujo pueda presentarse incluso sin infraestructura completa. La demo final incluye bienvenida integrada, home premium, ruta visual, práctica inteligente filtrable, Tutor IA contextual, perfil gamificado y panel profesor profesional.
 
 ## Diferenciador
 
@@ -26,20 +26,20 @@ DuocDev toma esos patrones, pero los orienta a una experiencia académica de Duo
 
 ## Flujo estudiante
 
-1. Inicio con saludo, nivel, XP, racha, meta diaria y continuidad.
-2. Ruta con cursos ordenados por nivel, progreso, estados y práctica docente disponible.
+1. Inicio con hero de bienvenida, nivel, XP, racha, meta diaria, misiones y continuidad.
+2. Ruta visual tipo roadmap con cursos ordenados por nivel, progreso, dificultad, estados y práctica docente disponible.
 3. Curso con resumen, lecciones y ejercicios publicados.
 4. Lección con objetivo, explicación, ejemplo, tip docente y acceso al Tutor IA.
 5. Desafío con alternativas, feedback inmediato, pista y XP.
 6. Resultado con progreso, motivación, continuidad y retorno seguro.
-7. Práctica inteligente con ejercicios revisados/publicados o fallback demo.
-8. Perfil con carrera, Duoc UC, nivel, XP, progreso e insignias.
+7. Práctica inteligente con filtros, ejercicios revisados/publicados o fallback demo.
+8. Perfil premium con carrera, Duoc UC, nivel, XP, progreso, resumen e insignias.
 
 ## Flujo profesor
 
 1. Perfil → Entrar como profesor.
-2. Panel Profesor con estado de backend, sincronización, métricas y acciones rápidas.
-3. Subir material como texto académico.
+2. Panel Profesor visual con estado de backend, sincronización, métricas, recomendación IA y acciones rápidas.
+3. Subir material como texto académico con contador de caracteres y validaciones.
 4. Generar ejercicios desde material.
 5. Revisar/editar pregunta, alternativas, respuesta correcta, explicación y XP.
 6. Aprobar.

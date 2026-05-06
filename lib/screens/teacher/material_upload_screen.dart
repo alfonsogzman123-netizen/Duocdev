@@ -38,13 +38,14 @@ class _MaterialUploadScreenState extends State<MaterialUploadScreen> {
   }
 
   Future<void> _save({bool goGenerate = false}) async {
+    final text = rawTextController.text.trim();
     if (titleController.text.trim().isEmpty ||
         selectedCourseId == null ||
-        rawTextController.text.trim().length < 100) {
+        text.length < 100) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-            'Título, curso y contenido (mínimo 100 caracteres) son obligatorios.',
+            'El material debe tener suficiente contenido para generar ejercicios.',
           ),
         ),
       );
@@ -62,8 +63,8 @@ class _MaterialUploadScreenState extends State<MaterialUploadScreen> {
       teacherName: 'Profesor DuocDev',
       createdAt: DateTime.now(),
       sourceType: MaterialSourceType.text,
-      rawText: rawTextController.text.trim(),
-      summary: rawTextController.text.trim().substring(0, 100),
+      rawText: text,
+      summary: text.substring(0, text.length.clamp(0, 100).toInt()),
       tags: tagsController.text
           .split(',')
           .map((tag) => tag.trim())
@@ -77,11 +78,14 @@ class _MaterialUploadScreenState extends State<MaterialUploadScreen> {
 
     await materialService.saveMaterial(material);
     if (!mounted) return;
-    if (materialService.lastInfoMessage != null) {
-      messenger.showSnackBar(
-        SnackBar(content: Text(materialService.lastInfoMessage!)),
-      );
-    }
+    messenger.showSnackBar(
+      SnackBar(
+        content: Text(
+          materialService.lastInfoMessage ??
+              'Material guardado. Si backend no estaba disponible, quedó pendiente de sincronización.',
+        ),
+      ),
+    );
 
     if (goGenerate) {
       navigator.pushReplacement(
@@ -98,25 +102,62 @@ class _MaterialUploadScreenState extends State<MaterialUploadScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final chars = rawTextController.text.trim().length;
+    final enough = chars >= 100;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Subir material')),
       body: ListView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.fromLTRB(20, 14, 20, 26),
         children: [
-          const DuocCard(
-            radius: 22,
-            child: Text(
-              'En esta versión MVP, el material se ingresa como texto. Próximamente se podrán subir PDF, DOCX y PPTX.',
+          HeroPanel(
+            icon: Icons.upload_file_rounded,
+            colors: const [
+              Color(0xFF0E7490),
+              Color(0xFF312E81),
+              Color(0xFF0F172A),
+            ],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                StatusBadge(
+                  label: 'Material académico',
+                  color: Color(0xFF22D3EE),
+                  icon: Icons.article_outlined,
+                ),
+                SizedBox(height: 14),
+                Text(
+                  'Sube una guía para generar práctica',
+                  style: TextStyle(
+                    fontSize: 31,
+                    height: 1.05,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'En esta versión MVP el material se ingresa como texto. Próximamente PDF, DOCX y PPTX.',
+                  style: TextStyle(color: Colors.white70, height: 1.35),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 16),
           DuocCard(
             radius: 24,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const Text(
+                  'Datos del material',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
+                ),
+                const SizedBox(height: 8),
                 TextField(
                   controller: titleController,
-                  decoration: const InputDecoration(labelText: 'Título'),
+                  decoration: const InputDecoration(
+                    labelText: 'Título del material',
+                  ),
                 ),
                 DropdownButtonFormField<String>(
                   initialValue: selectedCourseId,
@@ -138,20 +179,70 @@ class _MaterialUploadScreenState extends State<MaterialUploadScreen> {
                 ),
                 TextField(
                   controller: tagsController,
-                  decoration: const InputDecoration(labelText: 'Tags (coma)'),
-                ),
-                TextField(
-                  controller: rawTextController,
-                  minLines: 7,
-                  maxLines: 9,
                   decoration: const InputDecoration(
-                    labelText: 'Contenido académico',
+                    labelText: 'Tags separados por coma',
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 14),
+          DuocCard(
+            radius: 24,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Expanded(
+                      child: Text(
+                        'Contenido académico',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
+                    StatusBadge(
+                      label: '$chars caracteres',
+                      color: enough
+                          ? const Color(0xFF22C55E)
+                          : const Color(0xFFFB923C),
+                      icon: enough
+                          ? Icons.check_circle_rounded
+                          : Icons.info_outline,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Agrega una explicación, guía o resumen de clase. Mientras más contexto, mejores ejercicios.',
+                  style: TextStyle(color: Colors.white70, height: 1.35),
+                ),
+                TextField(
+                  controller: rawTextController,
+                  minLines: 8,
+                  maxLines: 12,
+                  onChanged: (_) => setState(() {}),
+                  decoration: const InputDecoration(
+                    hintText: 'Pega aquí el contenido de la clase...',
+                    border: InputBorder.none,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 14),
+          HeroPanel(
+            icon: Icons.auto_fix_high_rounded,
+            colors: const [Color(0xFF581C87), Color(0xFF0F172A)],
+            padding: const EdgeInsets.all(18),
+            child: const Text(
+              'La IA/demo generará preguntas iniciales. El profesor siempre revisa, aprueba y publica antes de que el estudiante practique.',
+              style: TextStyle(color: Colors.white70, height: 1.35),
+            ),
+          ),
+          const SizedBox(height: 16),
           PrimaryButton(label: 'Guardar material', onPressed: () => _save()),
           const SizedBox(height: 8),
           PrimaryButton(

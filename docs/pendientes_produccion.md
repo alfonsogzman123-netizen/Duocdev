@@ -41,7 +41,8 @@
 - [ ] CI/CD con analyze, test y lint.
 - [ ] Pruebas manuales en emulador Android y dispositivo físico.
 - [ ] Revisión de overflows y accesibilidad.
-- [ ] Capturas actualizadas para README.
+- [ ] Capturas actualizadas para README después del rediseño visual.
+- [ ] QA visual de Home, Ruta, Práctica, Tutor IA, Perfil y Panel Profesor en emulador Android.
 
 ## Checklist publicación
 

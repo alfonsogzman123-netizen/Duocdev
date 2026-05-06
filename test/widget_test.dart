@@ -5,7 +5,11 @@ void main() {
   testWidgets('DuocDev muestra el dashboard inicial', (tester) async {
     await tester.pumpWidget(const DuocDevApp());
 
-    expect(find.text('Hola, Estudiante 👋'), findsOneWidget);
-    expect(find.text('Continúa tu ruta de programación'), findsOneWidget);
+    expect(find.text('DuocDev'), findsOneWidget);
+    expect(
+      find.text('Aprende programación con práctica inteligente'),
+      findsOneWidget,
+    );
+    expect(find.text('Comenzar'), findsOneWidget);
   });
 }

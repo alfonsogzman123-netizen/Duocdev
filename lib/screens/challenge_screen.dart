@@ -29,23 +29,54 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Desafío')),
       body: ListView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.fromLTRB(20, 14, 20, 26),
         children: [
-          Text(
-            widget.lesson.title,
-            style: const TextStyle(
-              color: Color(0xFF22D3EE),
-              fontWeight: FontWeight.w800,
+          HeroPanel(
+            icon: Icons.quiz_rounded,
+            colors: const [
+              Color(0xFF7C2D12),
+              Color(0xFF4C1D95),
+              Color(0xFF0F172A),
+            ],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                StatusBadge(
+                  label: widget.lesson.title,
+                  color: const Color(0xFFFFFFFF),
+                  icon: Icons.menu_book_rounded,
+                ),
+                const SizedBox(height: 14),
+                const Text(
+                  'Resuelve el desafío',
+                  style: TextStyle(fontSize: 31, fontWeight: FontWeight.w900),
+                ),
+                const SizedBox(height: 10),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(999),
+                  child: LinearProgressIndicator(
+                    value: answered ? 1 : (selected == null ? 0.35 : 0.7),
+                    minHeight: 10,
+                    color: Colors.white,
+                    backgroundColor: Colors.white24,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  'Elige una alternativa y revisa el feedback inmediato.',
+                  style: TextStyle(color: Colors.white70, height: 1.35),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 16),
           DuocCard(
             radius: 24,
             child: Text(
               challenge.question,
               style: const TextStyle(
                 fontSize: 24,
-                fontWeight: FontWeight.w800,
+                fontWeight: FontWeight.w900,
                 height: 1.25,
               ),
             ),
@@ -56,6 +87,7 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
             (index) => Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: _AnswerCard(
+                letter: String.fromCharCode(65 + index),
                 text: challenge.options[index],
                 selected: selected == index,
                 correctAnswer: challenge.correctIndex == index,
@@ -66,11 +98,20 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
           ),
           if (answered) ...[
             const SizedBox(height: 8),
-            _FeedbackCard(correct: correct, lesson: widget.lesson),
+            _FeedbackCard(
+              correct: correct,
+              lesson: widget.lesson,
+              onRetry: correct
+                  ? null
+                  : () => setState(() {
+                      selected = null;
+                      answered = false;
+                    }),
+            ),
           ],
           const SizedBox(height: 20),
           PrimaryButton(
-            label: answered ? 'Continuar' : 'Revisar respuesta',
+            label: answered ? 'Continuar' : 'Comprobar respuesta',
             onPressed: selected == null
                 ? null
                 : answered
@@ -94,6 +135,7 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
 
 class _AnswerCard extends StatelessWidget {
   const _AnswerCard({
+    required this.letter,
     required this.text,
     required this.selected,
     required this.correctAnswer,
@@ -101,6 +143,7 @@ class _AnswerCard extends StatelessWidget {
     required this.onTap,
   });
 
+  final String letter;
   final String text;
   final bool selected;
   final bool correctAnswer;
@@ -116,17 +159,36 @@ class _AnswerCard extends StatelessWidget {
         : selected
         ? const Color(0xFF8B5CF6)
         : const Color(0xFF334155);
+
     return DuocCard(
-      radius: 20,
+      radius: 22,
+      padding: const EdgeInsets.all(16),
       onTap: onTap,
       child: Row(
         children: [
+          Container(
+            width: 38,
+            height: 38,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.16),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: color),
+            ),
+            child: Center(
+              child: Text(
+                letter,
+                style: TextStyle(color: color, fontWeight: FontWeight.w900),
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
           Expanded(
             child: Text(
               text,
               style: const TextStyle(fontSize: 18, height: 1.25),
             ),
           ),
+          const SizedBox(width: 8),
           Icon(_icon(), color: color),
         ],
       ),
@@ -135,7 +197,7 @@ class _AnswerCard extends StatelessWidget {
 
   IconData _icon() {
     if (answered && correctAnswer) return Icons.check_circle_rounded;
-    if (answered && selected) return Icons.info_rounded;
+    if (answered && selected) return Icons.lightbulb_rounded;
     return selected
         ? Icons.radio_button_checked_rounded
         : Icons.radio_button_unchecked_rounded;
@@ -143,46 +205,59 @@ class _AnswerCard extends StatelessWidget {
 }
 
 class _FeedbackCard extends StatelessWidget {
-  const _FeedbackCard({required this.correct, required this.lesson});
+  const _FeedbackCard({
+    required this.correct,
+    required this.lesson,
+    required this.onRetry,
+  });
 
   final bool correct;
   final Lesson lesson;
+  final VoidCallback? onRetry;
 
   @override
   Widget build(BuildContext context) {
-    return DuocCard(
-      radius: 22,
-      child: Row(
+    final color = correct ? const Color(0xFF22C55E) : const Color(0xFFFB923C);
+    return HeroPanel(
+      colors: correct
+          ? const [Color(0xFF14532D), Color(0xFF0F172A)]
+          : const [Color(0xFF7C2D12), Color(0xFF0F172A)],
+      padding: const EdgeInsets.all(18),
+      icon: correct ? Icons.emoji_events_rounded : Icons.lightbulb_rounded,
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            correct ? Icons.emoji_events_rounded : Icons.lightbulb_rounded,
-            color: correct ? const Color(0xFF22C55E) : const Color(0xFFFB923C),
+          StatusBadge(
+            label: correct
+                ? 'Correcto • +30 XP'
+                : 'Pista • +10 XP por practicar',
+            color: color,
+            icon: correct
+                ? Icons.check_circle_rounded
+                : Icons.lightbulb_rounded,
           ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  correct
-                      ? '¡Correcto! +30 XP'
-                      : 'Buen intento. Recibirás +10 XP por practicar.',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  correct
-                      ? 'La alternativa correcta se enfoca en aplicar el concepto, no solo memorizarlo.'
-                      : 'Pista: vuelve al ejemplo de "${lesson.title}" y busca la opción que puedas aplicar en código.',
-                  style: const TextStyle(color: Colors.white70, height: 1.35),
-                ),
-              ],
+          const SizedBox(height: 12),
+          Text(
+            correct
+                ? '¡Muy bien aplicado!'
+                : 'Buen intento. Puedes intentarlo otra vez.',
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            correct
+                ? 'La alternativa correcta aplica el concepto en contexto, no solo lo memoriza.'
+                : 'Vuelve al ejemplo de "${lesson.title}" y busca la opción que puedas explicar en código.',
+            style: const TextStyle(color: Colors.white70, height: 1.35),
+          ),
+          if (onRetry != null) ...[
+            const SizedBox(height: 12),
+            OutlinedButton.icon(
+              onPressed: onRetry,
+              icon: const Icon(Icons.refresh_rounded),
+              label: const Text('Intentar de nuevo'),
             ),
-          ),
+          ],
         ],
       ),
     );

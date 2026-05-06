@@ -51,22 +51,62 @@ class _GeneratedExercisesScreenState extends State<GeneratedExercisesScreen> {
         .where((material) => material.id == selectedMaterialId)
         .firstOrNull;
     final exercises = _filtered(exerciseGenerationService.all);
+    final all = exerciseGenerationService.all;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Banco de ejercicios')),
       body: ListView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.fromLTRB(20, 14, 20, 26),
         children: [
-          const Text(
-            'Banco de ejercicios',
-            style: TextStyle(fontSize: 32, fontWeight: FontWeight.w800),
+          HeroPanel(
+            icon: Icons.fact_check_rounded,
+            colors: const [
+              Color(0xFF312E81),
+              Color(0xFF164E63),
+              Color(0xFF0F172A),
+            ],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const StatusBadge(
+                  label: 'Banco docente',
+                  color: Color(0xFF22D3EE),
+                  icon: Icons.school_rounded,
+                ),
+                const SizedBox(height: 14),
+                const Text(
+                  'Banco de ejercicios',
+                  style: TextStyle(
+                    fontSize: 34,
+                    height: 1.0,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Revisa, ajusta, aprueba y publica práctica generada desde material académico.',
+                  style: TextStyle(color: Colors.white70, height: 1.35),
+                ),
+                const SizedBox(height: 16),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    _HeroChip('${all.length} generados', Icons.auto_awesome),
+                    _HeroChip(
+                      '${all.where((e) => e.approved).length} aprobados',
+                      Icons.check_circle_outline,
+                    ),
+                    _HeroChip(
+                      '${all.where((e) => e.published).length} publicados',
+                      Icons.publish_rounded,
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 6),
-          const Text(
-            'Revisa, ajusta, aprueba y publica práctica generada desde material académico.',
-            style: TextStyle(color: Colors.white70, fontSize: 16),
-          ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 16),
           _GenerationCard(
             materials: materials,
             selectedMaterialId: selectedMaterialId,
@@ -118,15 +158,16 @@ class _GeneratedExercisesScreenState extends State<GeneratedExercisesScreen> {
           ),
           const SizedBox(height: 14),
           if (exercises.isEmpty)
-            const DuocCard(
-              child: Text(
-                'No hay ejercicios en este filtro. Genera nuevos ejercicios o cambia el filtro.',
-              ),
+            const EmptyState(
+              icon: Icons.fact_check_outlined,
+              title: 'No hay ejercicios en este filtro',
+              message:
+                  'Genera nuevos ejercicios o cambia el filtro para revisar el banco docente.',
             )
           else
             ...exercises.map(
               (exercise) => Padding(
-                padding: const EdgeInsets.only(bottom: 10),
+                padding: const EdgeInsets.only(bottom: 12),
                 child: _ExerciseBankCard(
                   exercise: exercise,
                   onApprove: () async {
@@ -212,9 +253,15 @@ class _GenerationCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Generar desde material',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
+          const Row(
+            children: [
+              Icon(Icons.auto_fix_high_rounded, color: Color(0xFF22D3EE)),
+              SizedBox(width: 8),
+              Text(
+                'Generar desde material',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
+              ),
+            ],
           ),
           const SizedBox(height: 10),
           if (materials.isEmpty)
@@ -261,7 +308,7 @@ class _GenerationCard extends StatelessWidget {
               decoration: const InputDecoration(labelText: 'Dificultad'),
             ),
           ],
-          const SizedBox(height: 12),
+          const SizedBox(height: 14),
           PrimaryButton(
             label: isGenerating ? 'Generando...' : 'Generar ejercicios',
             onPressed: onGenerate,
@@ -288,82 +335,83 @@ class _ExerciseBankCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DuocCard(
-      radius: 22,
+      radius: 24,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              _StatePill(
+              StatusBadge(
                 label: _stateLabel(exercise),
-                published: exercise.published,
-                approved: exercise.approved,
+                color: exercise.published
+                    ? const Color(0xFF22C55E)
+                    : exercise.approved
+                    ? const Color(0xFF8B5CF6)
+                    : const Color(0xFFFB923C),
+                icon: exercise.published
+                    ? Icons.publish_rounded
+                    : exercise.approved
+                    ? Icons.check_circle_outline
+                    : Icons.pending_actions_rounded,
               ),
               const Spacer(),
-              Text(
-                '+${exercise.xpReward} XP',
-                style: const TextStyle(
-                  color: Color(0xFF22D3EE),
-                  fontWeight: FontWeight.w800,
-                ),
+              StatusBadge(
+                label: '+${exercise.xpReward} XP',
+                color: const Color(0xFFF59E0B),
+                icon: Icons.bolt_rounded,
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            exercise.question,
+            style: const TextStyle(
+              fontSize: 19,
+              fontWeight: FontWeight.w900,
+              height: 1.25,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              StatusBadge(
+                label: _courseName(exercise.courseId),
+                color: const Color(0xFF22D3EE),
+                icon: Icons.menu_book_rounded,
+              ),
+              StatusBadge(
+                label: _difficultyLabel(exercise.difficulty),
+                color: const Color(0xFF94A3B8),
+                icon: Icons.speed_rounded,
               ),
             ],
           ),
           const SizedBox(height: 10),
           Text(
-            exercise.question,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w800,
-              height: 1.25,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            '${_courseName(exercise.courseId)} • ${_difficultyLabel(exercise.difficulty)}',
-            style: const TextStyle(color: Colors.white70),
-          ),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 4,
-            children: exercise.options
-                .asMap()
-                .entries
-                .map(
-                  (option) => Chip(
-                    label: Text('${option.key + 1}. ${option.value}'),
-                    avatar: option.key == exercise.correctIndex
-                        ? const Icon(Icons.check_circle_outline, size: 18)
-                        : null,
-                  ),
-                )
-                .toList(),
-          ),
-          const SizedBox(height: 8),
-          Text(
             'Explicación: ${exercise.explanation}',
             style: const TextStyle(color: Colors.white70, height: 1.35),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           Wrap(
             spacing: 8,
             runSpacing: 8,
             children: [
               OutlinedButton.icon(
+                onPressed: onReview,
+                icon: const Icon(Icons.edit_outlined),
+                label: const Text('Revisar'),
+              ),
+              OutlinedButton.icon(
                 onPressed: exercise.approved ? null : onApprove,
                 icon: const Icon(Icons.check_rounded),
                 label: const Text('Aprobar'),
               ),
-              OutlinedButton.icon(
+              FilledButton.icon(
                 onPressed: exercise.published ? null : onPublish,
                 icon: const Icon(Icons.publish_rounded),
                 label: const Text('Publicar'),
-              ),
-              OutlinedButton.icon(
-                onPressed: onReview,
-                icon: const Icon(Icons.edit_outlined),
-                label: const Text('Editar / revisar'),
               ),
             ],
           ),
@@ -373,38 +421,31 @@ class _ExerciseBankCard extends StatelessWidget {
   }
 }
 
-class _StatePill extends StatelessWidget {
-  const _StatePill({
-    required this.label,
-    required this.published,
-    required this.approved,
-  });
+class _HeroChip extends StatelessWidget {
+  const _HeroChip(this.label, this.icon);
 
   final String label;
-  final bool published;
-  final bool approved;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
-    final color = published
-        ? const Color(0xFF22C55E)
-        : approved
-        ? const Color(0xFF8B5CF6)
-        : const Color(0xFFFB923C);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
+        color: Colors.white.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: color.withValues(alpha: 0.75)),
+        border: Border.all(color: Colors.white24),
       ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: color,
-          fontSize: 12,
-          fontWeight: FontWeight.w800,
-        ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: Colors.white, size: 15),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800),
+          ),
+        ],
       ),
     );
   }

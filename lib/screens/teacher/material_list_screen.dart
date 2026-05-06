@@ -13,37 +13,97 @@ class MaterialListScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Material académico')),
       body: ListView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.fromLTRB(20, 14, 20, 26),
         children: [
-          const Text(
-            'Material académico',
-            style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800),
+          HeroPanel(
+            icon: Icons.folder_open_rounded,
+            colors: const [
+              Color(0xFF0E7490),
+              Color(0xFF312E81),
+              Color(0xFF0F172A),
+            ],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const StatusBadge(
+                  label: 'Biblioteca docente',
+                  color: Color(0xFF22D3EE),
+                  icon: Icons.article_outlined,
+                ),
+                const SizedBox(height: 14),
+                const Text(
+                  'Material académico',
+                  style: TextStyle(
+                    fontSize: 33,
+                    height: 1.05,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  '${list.length} materiales disponibles para generar práctica inteligente.',
+                  style: const TextStyle(color: Colors.white70, height: 1.35),
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
           if (list.isEmpty)
-            const DuocCard(child: Text('Todavía no hay material cargado.'))
+            const EmptyState(
+              icon: Icons.article_outlined,
+              title: 'Todavía no hay material cargado',
+              message: 'Sube una guía o contenido de clase para comenzar.',
+            )
           else
             ...list.map(
               (material) => Padding(
-                padding: const EdgeInsets.only(bottom: 10),
+                padding: const EdgeInsets.only(bottom: 12),
                 child: DuocCard(
-                  radius: 22,
+                  radius: 24,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        material.title,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        '${material.subject} • ${material.status.name}',
-                        style: const TextStyle(color: Colors.white70),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.article_outlined,
+                            color: Color(0xFF22D3EE),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              material.title,
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 8),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
+                          StatusBadge(
+                            label: material.subject,
+                            color: const Color(0xFF8B5CF6),
+                            icon: Icons.menu_book_rounded,
+                          ),
+                          StatusBadge(
+                            label: material.unitName,
+                            color: const Color(0xFF22D3EE),
+                            icon: Icons.topic_rounded,
+                          ),
+                          StatusBadge(
+                            label: _statusLabel(material.status.name),
+                            color: const Color(0xFF22C55E),
+                            icon: Icons.check_circle_outline,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
                       Wrap(
                         spacing: 6,
                         runSpacing: 6,
@@ -51,10 +111,12 @@ class MaterialListScreen extends StatelessWidget {
                             .map((tag) => Chip(label: Text(tag)))
                             .toList(),
                       ),
+                      const SizedBox(height: 10),
                       Wrap(
                         spacing: 8,
+                        runSpacing: 8,
                         children: [
-                          TextButton(
+                          OutlinedButton.icon(
                             onPressed: () => Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -62,9 +124,10 @@ class MaterialListScreen extends StatelessWidget {
                                     MaterialDetailScreen(material: material),
                               ),
                             ),
-                            child: const Text('Ver detalle'),
+                            icon: const Icon(Icons.visibility_outlined),
+                            label: const Text('Ver detalle'),
                           ),
-                          TextButton(
+                          FilledButton.icon(
                             onPressed: () => Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -73,7 +136,8 @@ class MaterialListScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            child: const Text('Generar ejercicios'),
+                            icon: const Icon(Icons.auto_fix_high_rounded),
+                            label: const Text('Generar ejercicios'),
                           ),
                         ],
                       ),
@@ -85,5 +149,14 @@ class MaterialListScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _statusLabel(String status) {
+    return switch (status) {
+      'processed' => 'Procesado',
+      'draft' => 'Borrador',
+      'error' => 'Error',
+      _ => status,
+    };
   }
 }

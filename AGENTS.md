@@ -30,6 +30,7 @@ DuocDev es un MVP educativo con app Flutter para estudiante/profesor simulado y 
 - No eliminar funcionalidades existentes.
 - Mantener toda la UI visible en español.
 - Mantener el diseño premium oscuro actual.
+- Mantener la experiencia demo visualmente presentable; no entregar pantallas que parezcan placeholders.
 - No eliminar ni degradar modo profesor.
 - No eliminar backend.
 - No eliminar Tutor IA.

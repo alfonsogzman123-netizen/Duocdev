@@ -51,12 +51,51 @@ class _ReviewGeneratedExerciseScreenState
     return Scaffold(
       appBar: AppBar(title: const Text('Revisar ejercicio')),
       body: ListView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.fromLTRB(20, 14, 20, 26),
         children: [
+          HeroPanel(
+            icon: Icons.rate_review_rounded,
+            colors: const [
+              Color(0xFF581C87),
+              Color(0xFF164E63),
+              Color(0xFF0F172A),
+            ],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                StatusBadge(
+                  label: 'Control docente',
+                  color: Color(0xFF22D3EE),
+                  icon: Icons.fact_check_rounded,
+                ),
+                SizedBox(height: 14),
+                Text(
+                  'Revisar ejercicio',
+                  style: TextStyle(
+                    fontSize: 33,
+                    height: 1.05,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'Ajusta pregunta, alternativas, respuesta correcta, explicación y XP antes de publicar.',
+                  style: TextStyle(color: Colors.white70, height: 1.35),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
           DuocCard(
             radius: 24,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const Text(
+                  'Contenido del ejercicio',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
+                ),
+                const SizedBox(height: 8),
                 TextField(
                   controller: questionController,
                   decoration: const InputDecoration(labelText: 'Pregunta'),
@@ -69,7 +108,7 @@ class _ReviewGeneratedExerciseScreenState
                         child: TextField(
                           controller: optionControllers[index],
                           decoration: InputDecoration(
-                            labelText: 'Opción ${index + 1}',
+                            labelText: 'Alternativa ${index + 1}',
                           ),
                         ),
                       ),
@@ -89,6 +128,8 @@ class _ReviewGeneratedExerciseScreenState
                 ),
                 TextField(
                   controller: explanationController,
+                  minLines: 2,
+                  maxLines: 3,
                   decoration: const InputDecoration(labelText: 'Explicación'),
                 ),
                 TextField(
