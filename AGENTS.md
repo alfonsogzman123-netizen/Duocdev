@@ -37,6 +37,7 @@ DuocDev es un MVP educativo con app Flutter para estudiante/profesor simulado y 
 - No eliminar cola de sincronización docente.
 - No romper README ni capturas en `docs/images/`.
 - No hardcodear claves, API keys ni secretos.
+- No llamar proveedores IA directamente desde Flutter; usar backend seguro.
 - No agregar Firebase, Supabase o login real hasta que exista una tarea explícita.
 - Documentar cambios relevantes cuando impacten producto, arquitectura o flujos.
 - Probar backend y Flutter antes de terminar cuando el entorno lo permita.

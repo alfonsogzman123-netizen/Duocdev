@@ -103,24 +103,46 @@ class _ReviewGeneratedExerciseScreenState
           PrimaryButton(
             label: 'Guardar cambios',
             onPressed: () {
-              exerciseGenerationService.updateExercise(
-                widget.exercise.copyWith(
-                  question: questionController.text,
-                  options: optionControllers
-                      .map((option) => option.text)
-                      .toList(),
-                  correctIndex: correctIndex,
-                  explanation: explanationController.text,
-                  xpReward:
-                      int.tryParse(xpController.text) ??
-                      widget.exercise.xpReward,
-                ),
-              );
+              exerciseGenerationService.updateExercise(_editedExercise());
               Navigator.pop(context);
             },
           ),
+          const SizedBox(height: 8),
+          OutlinedButton.icon(
+            onPressed: () async {
+              exerciseGenerationService.updateExercise(_editedExercise());
+              await exerciseGenerationService.approveExercise(
+                widget.exercise.id,
+              );
+              if (context.mounted) Navigator.pop(context);
+            },
+            icon: const Icon(Icons.check_circle_outline),
+            label: const Text('Aprobar'),
+          ),
+          const SizedBox(height: 8),
+          OutlinedButton.icon(
+            onPressed: () async {
+              exerciseGenerationService.updateExercise(_editedExercise());
+              await exerciseGenerationService.publishExercise(
+                widget.exercise.id,
+              );
+              if (context.mounted) Navigator.pop(context);
+            },
+            icon: const Icon(Icons.publish_rounded),
+            label: const Text('Publicar'),
+          ),
         ],
       ),
+    );
+  }
+
+  GeneratedExercise _editedExercise() {
+    return widget.exercise.copyWith(
+      question: questionController.text.trim(),
+      options: optionControllers.map((option) => option.text.trim()).toList(),
+      correctIndex: correctIndex,
+      explanation: explanationController.text.trim(),
+      xpReward: int.tryParse(xpController.text) ?? widget.exercise.xpReward,
     );
   }
 }

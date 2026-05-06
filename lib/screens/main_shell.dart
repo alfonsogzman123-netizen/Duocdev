@@ -1,6 +1,7 @@
 import 'package:duocdev/screens/home_screen.dart';
 import 'package:duocdev/screens/profile_screen.dart';
 import 'package:duocdev/screens/route_screen.dart';
+import 'package:duocdev/screens/smart_practice_screen.dart';
 import 'package:duocdev/screens/tutor_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -17,8 +18,13 @@ class _MainShellState extends State<MainShell> {
   @override
   Widget build(BuildContext context) {
     final pages = [
-      HomeScreen(onGoToRoute: () => setState(() => page = 1)),
+      HomeScreen(
+        onGoToRoute: () => setState(() => page = 1),
+        onGoToPractice: () => setState(() => page = 2),
+        onGoToTutor: () => setState(() => page = 3),
+      ),
       const RouteScreen(),
+      const SmartPracticeScreen(),
       const TutorScreen(),
       const ProfileScreen(),
     ];
@@ -40,6 +46,10 @@ class _MainShellState extends State<MainShell> {
           BottomNavigationBarItem(
             icon: Icon(Icons.menu_book_rounded),
             label: 'Cursos',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.psychology_alt_rounded),
+            label: 'Práctica',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.auto_awesome),

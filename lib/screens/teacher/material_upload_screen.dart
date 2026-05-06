@@ -20,7 +20,7 @@ class _MaterialUploadScreenState extends State<MaterialUploadScreen> {
   String? selectedCourseId;
   final courses = const {
     'logica': 'Lógica de Programación',
-    'python': 'Python',
+    'python': 'Python Básico',
     'git': 'Git y GitHub',
     'web': 'Desarrollo Web',
     'java': 'Java',
@@ -155,7 +155,7 @@ class _MaterialUploadScreenState extends State<MaterialUploadScreen> {
           PrimaryButton(label: 'Guardar material', onPressed: () => _save()),
           const SizedBox(height: 8),
           PrimaryButton(
-            label: 'Generar ejercicios con IA',
+            label: 'Guardar y generar ejercicios',
             onPressed: () => _save(goGenerate: true),
           ),
         ],

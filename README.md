@@ -1,12 +1,16 @@
 # DuocDev
 
-**Plataforma educativa móvil para estudiantes de Ingeniería Informática.**
+**Plataforma educativa móvil para estudiantes de Ingeniería Informática de Duoc UC.**
 
-DuocDev es una app educativa inspirada en **SoloLearn, CoddyTech y Duolingo**, orientada a estudiantes de Ingeniería Informática de **Duoc UC**. El proyecto combina aprendizaje por rutas, desafíos interactivos, gamificación (XP/progreso), Tutor IA y un modo profesor simulado para crear y publicar práctica académica.
+DuocDev es un MVP educativo avanzado inspirado en ideas de SoloLearn, CoddyTech y Duolingo, pero con una propuesta propia: convertir material académico real en práctica personalizada revisada por profesor.
 
-> ⚠️ Estado del proyecto: **MVP educativo avanzado en desarrollo** (no producción).
+> Estado del proyecto: **MVP académico avanzado**. No es producción; falta revisión legal, seguridad, base de datos real y publicación.
 
----
+## Propuesta diferencial
+
+`Profesor sube material académico real → IA/demo genera ejercicios → profesor revisa y publica → estudiante practica contenido personalizado → DuocDev mide XP, racha, progreso y aprendizaje.`
+
+DuocDev no busca ser una app genérica de cursos. El valor principal está en conectar la sala de clases con práctica móvil guiada.
 
 ## Capturas del proyecto
 
@@ -53,62 +57,53 @@ Las siguientes capturas muestran el estado actual del MVP de **DuocDev**, incluy
 
 ## Funcionalidades actuales
 
-- [Estrategia de producto](docs/product_strategy.md)
+- Dashboard estudiante con nivel, XP, racha, meta diaria y continuidad de curso.
+- Ruta de cursos: Lógica de Programación, Python Básico, Git y GitHub, Desarrollo Web, Java, SQL y C++ próximamente.
+- Microlecciones con objetivo, explicación, ejemplo de código, tip docente y desafío.
+- Desafíos con feedback inmediato, XP y resultado.
+- Práctica inteligente con ejercicios publicados por profesor y fallback demo.
+- Perfil con progreso, carrera, Duoc UC, insignias y acceso a modo profesor.
+- Tutor IA contextual con modo demo/API seguro vía backend.
+- Panel profesor con estado backend, métricas, materiales, banco de ejercicios y sincronización.
+- Carga de material académico como texto.
+- Generación de ejercicios desde material, aprobación y publicación.
+- Backend Node.js/Express con persistencia JSON local.
+- Modo offline/fallback y cola de sincronización docente.
 
-- Ruta de aprendizaje por cursos.
-- Lecciones con contenido y ejemplos.
-- Desafíos interactivos.
-- Pantalla de resultado.
-- XP y progreso local.
-- Perfil del estudiante.
-- Tutor IA.
-- Modo profesor.
-- Carga de material académico.
-- Generación de ejercicios desde material.
-- Aprobación y publicación de ejercicios.
-- Backend MVP.
-
----
-
-## Modo estudiante 👨‍🎓
+## Modo estudiante
 
 Flujo principal:
 
-`Inicio → Cursos → Curso → Lección → Desafío → Resultado → Perfil`
+`Inicio → Cursos → Curso → Lección → Desafío → Resultado → Práctica inteligente → Perfil`
 
----
-
-## Modo profesor 👩‍🏫
+## Modo profesor
 
 Flujo principal:
 
-`Perfil → Modo Profesor → Subir material → Generar ejercicios → Aprobar/Publicar → Estudiante practica`
+`Perfil → Entrar como profesor → Panel Profesor → Subir material → Generar ejercicios → Banco de ejercicios → Revisar/Aprobar/Publicar → Estudiante practica`
 
----
+## Tutor IA
 
-## Tutor IA 🤖
+- Flutter no guarda ni expone claves.
+- La app consulta `POST /ai/tutor` en el backend.
+- Si no hay `OPENAI_API_KEY` o el backend falla, responde con fallback educativo demo.
+- El tutor apoya el aprendizaje, pero no reemplaza la práctica ni la revisión docente.
 
-- Funciona en **modo demo** cuando no hay API key.
-- Está preparado para **IA real** con integración OpenAI.
-- Permite trabajar con **contexto académico** para respuestas más útiles.
-
----
-
-## Backend MVP (Node.js + Express) 🛠️
-
-El repositorio incluye un backend independiente en `backend/` para materiales y ejercicios.
+## Backend MVP
 
 Endpoints principales:
 
 - `GET /health`
 - `GET /materials`
 - `POST /materials`
+- `GET /materials/:id`
 - `POST /materials/:id/generate-exercises`
 - `GET /exercises`
 - `POST /exercises/:id/approve`
 - `POST /exercises/:id/publish`
-
----
+- `GET /courses/:courseId/exercises`
+- `GET /ai/info`
+- `POST /ai/tutor`
 
 ## Tecnologías
 
@@ -116,25 +111,19 @@ Endpoints principales:
 - Dart
 - Node.js
 - Express
-- OpenAI API preparada
-- Git/GitHub
-- Android Studio
+- JSON local para MVP
+- OpenAI preparado solo desde backend
 
----
+## Documentación
 
-## Estructura del proyecto
+- [Estrategia de producto](docs/product_strategy.md)
+- [Arquitectura](docs/arquitectura.md)
+- [Integración backend](docs/backend_integration.md)
+- [Modo offline y sincronización](docs/offline_sync.md)
+- [Pendientes de producción](docs/pendientes_produccion.md)
+- [Guía para agentes](AGENTS.md)
 
-```text
-Duocdev/
-  lib/
-  backend/
-  android/
-  README.md
-```
-
----
-
-## Cómo ejecutar la app Flutter
+## Cómo ejecutar Flutter
 
 ```bash
 flutter clean
@@ -142,11 +131,15 @@ flutter pub get
 flutter run
 ```
 
----
+Para Android Emulator con backend local:
+
+```bash
+flutter run --dart-define=BACKEND_BASE_URL=http://10.0.2.2:3000
+```
 
 ## Cómo ejecutar backend
 
-**Opción Windows (CMD):**
+Windows:
 
 ```bash
 cd backend
@@ -154,7 +147,7 @@ npm.cmd install
 npm.cmd run dev
 ```
 
-**Opción estándar:**
+Linux/macOS:
 
 ```bash
 cd backend
@@ -162,43 +155,43 @@ npm install
 npm run dev
 ```
 
----
-
 ## Probar backend
 
-Abrir en navegador o cliente HTTP:
+```bash
+curl http://localhost:3000/health
+curl http://localhost:3000/materials
+curl http://localhost:3000/exercises
+```
 
-`http://localhost:3000/health`
+Respuesta esperada de salud:
 
----
+```json
+{
+  "ok": true,
+  "service": "DuocDev Backend"
+}
+```
 
-## Variables de entorno 🔐
+## Variables de entorno
 
-- No se suben claves reales al repositorio.
-- Usar archivo de ejemplo:
-  - `backend/.env.example`
-- Variable preparada:
-  - `OPENAI_API_KEY=`
+Usar `backend/.env.example` como base:
 
----
+```env
+PORT=3000
+OPENAI_API_KEY=
+```
 
-## Estado actual
-
-DuocDev se encuentra como **MVP avanzado en desarrollo**, enfocado en validación académica, flujo completo de aprendizaje y preparación técnica para una arquitectura más robusta.
-
----
+No se suben claves reales al repositorio.
 
 ## Roadmap
 
-- Conectar Flutter al backend real.
-- Login de estudiantes/profesores.
-- Base de datos.
-- Subida real de PDF/DOCX/PPTX.
-- Panel web para profesores.
-- Publicación en Google Play.
-- Políticas legales y privacidad.
-
----
+1. MVP Flutter + backend + IA demo.
+2. Base de datos real.
+3. Login y roles estudiante/profesor.
+4. Subida de PDF/DOCX/PPTX y extracción de texto.
+5. IA real con material indexado desde backend.
+6. Panel web profesor.
+7. Publicación móvil y operación segura.
 
 ## Autor
 

@@ -1,65 +1,112 @@
 [
   {
-    "id": "ex_1778097290566_0",
-    "materialId": "mat_1778097278827",
+    "id": "ex_py_variables_1",
+    "materialId": "mat_py_demo",
     "courseId": "python",
+    "lessonId": "p2",
     "type": "multiple_choice",
     "difficulty": "basic",
-    "question": "Según el material, ¿qué opción describe mejor \"C:\\Users\\alfon\\duocdev\"?",
+    "question": "Según la guía de Python, ¿para qué sirve una variable?",
     "options": [
-      "Concepto central del material",
-      "Tema fuera del material",
-      "Error de sintaxis obligatorio",
-      "Comando no existente"
+      "Para guardar un dato y reutilizarlo durante el programa",
+      "Para eliminar automáticamente todos los errores",
+      "Para publicar código en GitHub",
+      "Para repetir instrucciones sin condiciones"
     ],
     "correctIndex": 0,
-    "explanation": "La alternativa 1 resume la idea principal del contenido entregado por el profesor.",
-    "xpReward": 20,
-    "approved": false,
-    "published": false,
-    "sourceReference": "cd C:\\Users\\alfon\\duocdevflutter analyzeflutter testflutter run --dart-define=BACKEND_BASE_URL=http://10.0.2.2:3000",
-    "createdAt": "2026-05-06T19:54:50.566Z"
-  },
-  {
-    "id": "ex_1778097290566_1",
-    "materialId": "mat_1778097278827",
-    "courseId": "python",
-    "type": "multiple_choice",
-    "difficulty": "basic",
-    "question": "Según el material, ¿qué opción describe mejor \"flutter\"?",
-    "options": [
-      "Concepto central del material",
-      "Tema fuera del material",
-      "Error de sintaxis obligatorio",
-      "Comando no existente"
-    ],
-    "correctIndex": 0,
-    "explanation": "La alternativa 1 resume la idea principal del contenido entregado por el profesor.",
-    "xpReward": 20,
+    "explanation": "Una variable da nombre a un dato para usarlo después sin escribirlo de nuevo.",
+    "xpReward": 25,
     "approved": true,
     "published": true,
-    "sourceReference": "cd C:\\Users\\alfon\\duocdevflutter analyzeflutter testflutter run --dart-define=BACKEND_BASE_URL=http://10.0.2.2:3000",
-    "createdAt": "2026-05-06T19:54:50.566Z"
+    "sourceReference": "Variables y condicionales en Python",
+    "createdAt": "2026-05-04T00:00:00.000Z"
   },
   {
-    "id": "ex_1778097290566_2",
-    "materialId": "mat_1778097278827",
+    "id": "ex_py_condiciones_1",
+    "materialId": "mat_py_demo",
     "courseId": "python",
+    "lessonId": "p3",
     "type": "multiple_choice",
-    "difficulty": "basic",
-    "question": "Según el material, ¿qué opción describe mejor \"analyze\"?",
+    "difficulty": "intermediate",
+    "question": "¿Qué estructura permite ejecutar caminos distintos según una condición?",
     "options": [
-      "Concepto central del material",
-      "Tema fuera del material",
-      "Error de sintaxis obligatorio",
-      "Comando no existente"
+      "if / elif / else",
+      "print",
+      "git commit",
+      "range"
     ],
     "correctIndex": 0,
-    "explanation": "La alternativa 1 resume la idea principal del contenido entregado por el profesor.",
-    "xpReward": 20,
+    "explanation": "Las condiciones evalúan una expresión y ejecutan el bloque que corresponde.",
+    "xpReward": 35,
+    "approved": true,
+    "published": true,
+    "sourceReference": "Variables y condicionales en Python",
+    "createdAt": "2026-05-04T00:05:00.000Z"
+  },
+  {
+    "id": "ex_git_commit_1",
+    "materialId": "mat_git_demo",
+    "courseId": "git",
+    "lessonId": "g1",
+    "type": "multiple_choice",
+    "difficulty": "basic",
+    "question": "En Git, ¿qué representa un commit?",
+    "options": [
+      "Un hito guardado del estado del proyecto",
+      "Una carpeta temporal del sistema operativo",
+      "Un error obligatorio de compilación",
+      "Una contraseña del repositorio"
+    ],
+    "correctIndex": 0,
+    "explanation": "Un commit registra un conjunto de cambios con mensaje e historial.",
+    "xpReward": 25,
+    "approved": true,
+    "published": true,
+    "sourceReference": "Control de versiones con Git",
+    "createdAt": "2026-05-03T00:00:00.000Z"
+  },
+  {
+    "id": "ex_web_roles_1",
+    "materialId": "mat_web_demo",
+    "courseId": "web",
+    "lessonId": "w1",
+    "type": "multiple_choice",
+    "difficulty": "basic",
+    "question": "¿Qué responsabilidad cumple CSS en una página web?",
+    "options": [
+      "Controlar presentación visual y estilos",
+      "Crear commits en el repositorio",
+      "Consultar tablas con SELECT",
+      "Compilar una aplicación Java"
+    ],
+    "correctIndex": 0,
+    "explanation": "CSS define estilos como colores, tamaños, espaciado y layout.",
+    "xpReward": 25,
+    "approved": true,
+    "published": false,
+    "sourceReference": "Estructura inicial HTML, CSS y JavaScript",
+    "createdAt": "2026-05-02T00:00:00.000Z"
+  },
+  {
+    "id": "ex_sql_select_1",
+    "materialId": "mat_sql_demo",
+    "courseId": "sql",
+    "lessonId": "s1",
+    "type": "multiple_choice",
+    "difficulty": "intermediate",
+    "question": "Antes de escribir una consulta SELECT, ¿qué conviene identificar?",
+    "options": [
+      "Tabla, columnas, filtros y orden esperado",
+      "Solo el color de la interfaz",
+      "La contraseña del servidor",
+      "La rama de GitHub"
+    ],
+    "correctIndex": 0,
+    "explanation": "Una consulta clara nace de saber qué datos se necesitan y con qué condiciones.",
+    "xpReward": 30,
     "approved": false,
     "published": false,
-    "sourceReference": "cd C:\\Users\\alfon\\duocdevflutter analyzeflutter testflutter run --dart-define=BACKEND_BASE_URL=http://10.0.2.2:3000",
-    "createdAt": "2026-05-06T19:54:50.566Z"
+    "sourceReference": "Consultas SELECT en SQL",
+    "createdAt": "2026-05-01T00:00:00.000Z"
   }
 ]

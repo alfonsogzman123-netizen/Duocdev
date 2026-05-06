@@ -1,11 +1,10 @@
-import 'package:duocdev/config/app_config.dart';
 import 'package:duocdev/models/academic_material.dart';
 import 'package:duocdev/services/ai_service.dart';
 import 'package:duocdev/services/material_service.dart';
 import 'package:duocdev/widgets/app_cards.dart';
 import 'package:flutter/material.dart';
 
-enum TutorMode { general, material, lesson, example }
+enum TutorMode { general, material, lesson, example, practice }
 
 class TutorScreen extends StatefulWidget {
   const TutorScreen({
@@ -84,27 +83,46 @@ class _TutorScreenState extends State<TutorScreen> {
           ),
           const SizedBox(height: 6),
           const Text(
-            'Asistente académico para entender, practicar y pedir ejemplos con contexto.',
+            'Tu tutor de programación inteligente',
             style: TextStyle(color: Colors.white70, fontSize: 16, height: 1.35),
           ),
           const SizedBox(height: 12),
-          if (!AppConfig.hasApiKey)
-            const DuocCard(
-              radius: 20,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(Icons.info_outline, color: Color(0xFFFB923C)),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      'Modo demo activo. El Tutor simula respuestas educativas sin usar claves reales.',
-                      style: TextStyle(color: Colors.white70, height: 1.35),
-                    ),
+          DuocCard(
+            radius: 20,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Icon(Icons.info_outline, color: Color(0xFFFB923C)),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    _ai.lastMode == 'openai'
+                        ? 'Tutor conectado al backend con IA real.'
+                        : 'Modo demo/API seguro. Flutter consulta el backend y usa fallback educativo si no está disponible.',
+                    style: const TextStyle(color: Colors.white70, height: 1.35),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
+          ),
+          const SizedBox(height: 14),
+          const DuocCard(
+            radius: 24,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Modos de ayuda',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'Pregunta general, material académico, lección actual, generación de ejemplos y preguntas de práctica.',
+                  style: TextStyle(color: Colors.white70, height: 1.35),
+                ),
+              ],
+            ),
+          ),
           const SizedBox(height: 14),
           Wrap(
             spacing: 8,
@@ -160,6 +178,12 @@ class _TutorScreenState extends State<TutorScreen> {
                 label: 'Resume esta lección',
                 onTap: () =>
                     _setQuestion('Resume esta lección en 5 ideas clave.'),
+              ),
+              _SuggestionChip(
+                label: 'Corrige mi respuesta',
+                onTap: () => _setQuestion(
+                  'Corrige mi respuesta y dime qué concepto debo repasar.',
+                ),
               ),
             ],
           ),
@@ -236,6 +260,8 @@ class _TutorScreenState extends State<TutorScreen> {
             'Lección actual no disponible. Responde como apoyo general.',
       TutorMode.example =>
         'Genera un ejemplo didáctico sobre $_context con código breve y una pregunta de práctica.',
+      TutorMode.practice =>
+        'Crea una pregunta de práctica sobre $_context con pista, respuesta correcta y explicación breve.',
     };
   }
 
@@ -245,6 +271,7 @@ class _TutorScreenState extends State<TutorScreen> {
       TutorMode.material => 'Material académico',
       TutorMode.lesson => 'Lección actual',
       TutorMode.example => 'Generar ejemplo',
+      TutorMode.practice => 'Pregunta de práctica',
     };
   }
 

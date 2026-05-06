@@ -35,7 +35,9 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
 
   Future<void> _syncNow() async {
     final messenger = ScaffoldMessenger.of(context);
-    if (backendConnected != true) {
+    final ok = await apiService.healthCheck();
+    if (mounted) setState(() => backendConnected = ok);
+    if (!ok) {
       messenger.showSnackBar(
         const SnackBar(
           content: Text('No se pudo sincronizar. Backend no disponible.'),
@@ -77,11 +79,14 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
     if (!mounted) return;
     await _refresh();
     if (!mounted) return;
+    final remaining = syncQueueService.pendingCount;
     messenger.showSnackBar(
       SnackBar(
         content: Text(
-          synced > 0
-              ? 'Sincronización completada.'
+          remaining == 0
+              ? 'Sincronización al día.'
+              : synced > 0
+              ? 'Sincronización parcial. Quedan $remaining pendientes.'
               : 'No se pudo sincronizar. Intenta nuevamente.',
         ),
       ),
@@ -274,8 +279,8 @@ class _BackendStatusCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   isConnected
-                      ? 'Backend conectado'
-                      : 'Backend no disponible / modo demo',
+                      ? 'Backend: Conectado'
+                      : 'Backend: No disponible / Modo demo',
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w800,
