@@ -1,25 +1,27 @@
 import { config } from 'dotenv';
+
 config();
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY?.trim();
 
 function demoGenerate(material, { quantity, difficulty, type }) {
-  const tokens = material.rawText.split(/\s+/).filter((w) => w.length > 4);
-  return Array.from({ length: quantity }, (_, i) => {
-    const t = tokens[i % Math.max(tokens.length, 1)] ?? 'concepto';
+  const tokens = material.rawText.split(/\s+/).filter((word) => word.length > 4);
+  return Array.from({ length: quantity }, (_, index) => {
+    const token = tokens[index % Math.max(tokens.length, 1)] ?? 'concepto';
     return {
-      id: `ex_${Date.now()}_${i}`,
+      id: `ex_${Date.now()}_${index}`,
       materialId: material.id,
       courseId: material.courseId,
       type,
       difficulty,
-      question: `Según el material, ¿qué opción describe mejor "${t}"?`,
+      question: `Según el material, ¿qué opción describe mejor "${token}"?`,
       options: ['Concepto central del material', 'Tema fuera del material', 'Error de sintaxis obligatorio', 'Comando no existente'],
       correctIndex: 0,
       explanation: 'La alternativa 1 resume la idea principal del contenido entregado por el profesor.',
       xpReward: 20,
       approved: false,
       published: false,
+      sourceReference: material.title,
       createdAt: new Date().toISOString(),
     };
   });
@@ -48,19 +50,20 @@ export async function generateExercisesFromMaterial(material, options) {
     const data = await response.json();
     const output = data.output_text ?? '[]';
     const parsed = JSON.parse(output);
-    const exercises = parsed.map((e, i) => ({
-      id: `ex_${Date.now()}_${i}`,
+    const exercises = parsed.map((exercise, index) => ({
+      id: `ex_${Date.now()}_${index}`,
       materialId: material.id,
       courseId: material.courseId,
-      type: e.type ?? options.type,
-      difficulty: e.difficulty ?? options.difficulty,
-      question: e.question,
-      options: e.options,
-      correctIndex: e.correctIndex ?? 0,
-      explanation: e.explanation ?? 'Sin explicación',
-      xpReward: e.xpReward ?? 20,
+      type: exercise.type ?? options.type,
+      difficulty: exercise.difficulty ?? options.difficulty,
+      question: exercise.question,
+      options: exercise.options,
+      correctIndex: exercise.correctIndex ?? 0,
+      explanation: exercise.explanation ?? 'Sin explicación',
+      xpReward: exercise.xpReward ?? 20,
       approved: false,
       published: false,
+      sourceReference: material.title,
       createdAt: new Date().toISOString(),
     }));
     return { mode: 'openai', exercises };

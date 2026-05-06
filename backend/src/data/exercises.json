@@ -1,1 +1,65 @@
-[]
+[
+  {
+    "id": "ex_1778097290566_0",
+    "materialId": "mat_1778097278827",
+    "courseId": "python",
+    "type": "multiple_choice",
+    "difficulty": "basic",
+    "question": "Según el material, ¿qué opción describe mejor \"C:\\Users\\alfon\\duocdev\"?",
+    "options": [
+      "Concepto central del material",
+      "Tema fuera del material",
+      "Error de sintaxis obligatorio",
+      "Comando no existente"
+    ],
+    "correctIndex": 0,
+    "explanation": "La alternativa 1 resume la idea principal del contenido entregado por el profesor.",
+    "xpReward": 20,
+    "approved": false,
+    "published": false,
+    "sourceReference": "cd C:\\Users\\alfon\\duocdevflutter analyzeflutter testflutter run --dart-define=BACKEND_BASE_URL=http://10.0.2.2:3000",
+    "createdAt": "2026-05-06T19:54:50.566Z"
+  },
+  {
+    "id": "ex_1778097290566_1",
+    "materialId": "mat_1778097278827",
+    "courseId": "python",
+    "type": "multiple_choice",
+    "difficulty": "basic",
+    "question": "Según el material, ¿qué opción describe mejor \"flutter\"?",
+    "options": [
+      "Concepto central del material",
+      "Tema fuera del material",
+      "Error de sintaxis obligatorio",
+      "Comando no existente"
+    ],
+    "correctIndex": 0,
+    "explanation": "La alternativa 1 resume la idea principal del contenido entregado por el profesor.",
+    "xpReward": 20,
+    "approved": true,
+    "published": true,
+    "sourceReference": "cd C:\\Users\\alfon\\duocdevflutter analyzeflutter testflutter run --dart-define=BACKEND_BASE_URL=http://10.0.2.2:3000",
+    "createdAt": "2026-05-06T19:54:50.566Z"
+  },
+  {
+    "id": "ex_1778097290566_2",
+    "materialId": "mat_1778097278827",
+    "courseId": "python",
+    "type": "multiple_choice",
+    "difficulty": "basic",
+    "question": "Según el material, ¿qué opción describe mejor \"analyze\"?",
+    "options": [
+      "Concepto central del material",
+      "Tema fuera del material",
+      "Error de sintaxis obligatorio",
+      "Comando no existente"
+    ],
+    "correctIndex": 0,
+    "explanation": "La alternativa 1 resume la idea principal del contenido entregado por el profesor.",
+    "xpReward": 20,
+    "approved": false,
+    "published": false,
+    "sourceReference": "cd C:\\Users\\alfon\\duocdevflutter analyzeflutter testflutter run --dart-define=BACKEND_BASE_URL=http://10.0.2.2:3000",
+    "createdAt": "2026-05-06T19:54:50.566Z"
+  }
+]

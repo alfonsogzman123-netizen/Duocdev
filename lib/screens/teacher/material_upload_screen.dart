@@ -28,13 +28,24 @@ class _MaterialUploadScreenState extends State<MaterialUploadScreen> {
     'cpp': 'C++',
   };
 
+  @override
+  void dispose() {
+    titleController.dispose();
+    unitController.dispose();
+    rawTextController.dispose();
+    tagsController.dispose();
+    super.dispose();
+  }
+
   Future<void> _save({bool goGenerate = false}) async {
     if (titleController.text.trim().isEmpty ||
         selectedCourseId == null ||
         rawTextController.text.trim().length < 100) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Título, curso y contenido (mínimo 100 caracteres) son obligatorios.'),
+          content: Text(
+            'Título, curso y contenido (mínimo 100 caracteres) son obligatorios.',
+          ),
         ),
       );
       return;
@@ -45,7 +56,9 @@ class _MaterialUploadScreenState extends State<MaterialUploadScreen> {
       title: titleController.text.trim(),
       subject: courses[selectedCourseId]!,
       courseId: selectedCourseId!,
-      unitName: unitController.text.trim().isEmpty ? 'Unidad general' : unitController.text.trim(),
+      unitName: unitController.text.trim().isEmpty
+          ? 'Unidad general'
+          : unitController.text.trim(),
       teacherName: 'Profesor DuocDev',
       createdAt: DateTime.now(),
       sourceType: MaterialSourceType.text,
@@ -59,22 +72,28 @@ class _MaterialUploadScreenState extends State<MaterialUploadScreen> {
       status: MaterialStatus.processed,
     );
 
+    final messenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+
     await materialService.saveMaterial(material);
-    if (mounted && materialService.lastInfoMessage != null) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(materialService.lastInfoMessage!)));
+    if (!mounted) return;
+    if (materialService.lastInfoMessage != null) {
+      messenger.showSnackBar(
+        SnackBar(content: Text(materialService.lastInfoMessage!)),
+      );
     }
 
     if (goGenerate) {
-      Navigator.pushReplacement(
-        context,
+      navigator.pushReplacement(
         MaterialPageRoute(
-          builder: (_) => GeneratedExercisesScreen(preselectedMaterialId: material.id),
+          builder: (_) =>
+              GeneratedExercisesScreen(preselectedMaterialId: material.id),
         ),
       );
       return;
     }
 
-    Navigator.pop(context);
+    navigator.pop();
   }
 
   @override
@@ -85,12 +104,14 @@ class _MaterialUploadScreenState extends State<MaterialUploadScreen> {
         padding: const EdgeInsets.all(20),
         children: [
           const DuocCard(
+            radius: 22,
             child: Text(
               'En esta versión MVP, el material se ingresa como texto. Próximamente se podrán subir PDF, DOCX y PPTX.',
             ),
           ),
           const SizedBox(height: 10),
           DuocCard(
+            radius: 24,
             child: Column(
               children: [
                 TextField(
@@ -98,12 +119,18 @@ class _MaterialUploadScreenState extends State<MaterialUploadScreen> {
                   decoration: const InputDecoration(labelText: 'Título'),
                 ),
                 DropdownButtonFormField<String>(
-                  value: selectedCourseId,
+                  initialValue: selectedCourseId,
                   decoration: const InputDecoration(labelText: 'Curso'),
                   items: courses.entries
-                      .map((entry) => DropdownMenuItem(value: entry.key, child: Text(entry.value)))
+                      .map(
+                        (entry) => DropdownMenuItem(
+                          value: entry.key,
+                          child: Text(entry.value),
+                        ),
+                      )
                       .toList(),
-                  onChanged: (value) => setState(() => selectedCourseId = value),
+                  onChanged: (value) =>
+                      setState(() => selectedCourseId = value),
                 ),
                 TextField(
                   controller: unitController,
@@ -117,7 +144,9 @@ class _MaterialUploadScreenState extends State<MaterialUploadScreen> {
                   controller: rawTextController,
                   minLines: 7,
                   maxLines: 9,
-                  decoration: const InputDecoration(labelText: 'Contenido académico'),
+                  decoration: const InputDecoration(
+                    labelText: 'Contenido académico',
+                  ),
                 ),
               ],
             ),

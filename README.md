@@ -53,6 +53,8 @@ Las siguientes capturas muestran el estado actual del MVP de **DuocDev**, incluy
 
 ## Funcionalidades actuales
 
+- [Estrategia de producto](docs/product_strategy.md)
+
 - Ruta de aprendizaje por cursos.
 - Lecciones con contenido y ejemplos.
 - Desafíos interactivos.

@@ -23,7 +23,8 @@ class LocalCacheService {
   }
 
   List<GeneratedExercise> getCachedExercises() => List.unmodifiable(_exercises);
-  void addExercises(List<GeneratedExercise> exercises) => _exercises.insertAll(0, exercises);
+  void addExercises(List<GeneratedExercise> exercises) =>
+      _exercises.insertAll(0, exercises);
 
   void updateExercise(GeneratedExercise exercise) {
     final i = _exercises.indexWhere((e) => e.id == exercise.id);

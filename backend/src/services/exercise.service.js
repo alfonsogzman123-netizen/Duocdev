@@ -1,7 +1,9 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const exercisesPath = path.resolve(process.cwd(), 'backend/src/data/exercises.json');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const exercisesPath = path.resolve(__dirname, '../data/exercises.json');
 
 async function ensureFile() {
   try {
