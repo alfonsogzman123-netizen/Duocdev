@@ -5,13 +5,16 @@ import 'package:flutter/material.dart';
 
 class ReviewGeneratedExerciseScreen extends StatefulWidget {
   const ReviewGeneratedExerciseScreen({super.key, required this.exercise});
+
   final GeneratedExercise exercise;
 
   @override
-  State<ReviewGeneratedExerciseScreen> createState() => _ReviewGeneratedExerciseScreenState();
+  State<ReviewGeneratedExerciseScreen> createState() =>
+      _ReviewGeneratedExerciseScreenState();
 }
 
-class _ReviewGeneratedExerciseScreenState extends State<ReviewGeneratedExerciseScreen> {
+class _ReviewGeneratedExerciseScreenState
+    extends State<ReviewGeneratedExerciseScreen> {
   late final TextEditingController questionController;
   late final TextEditingController explanationController;
   late final TextEditingController xpController;
@@ -22,11 +25,25 @@ class _ReviewGeneratedExerciseScreenState extends State<ReviewGeneratedExerciseS
   void initState() {
     super.initState();
     questionController = TextEditingController(text: widget.exercise.question);
-    explanationController = TextEditingController(text: widget.exercise.explanation);
+    explanationController = TextEditingController(
+      text: widget.exercise.explanation,
+    );
     xpController = TextEditingController(text: '${widget.exercise.xpReward}');
-    optionControllers =
-        widget.exercise.options.map((option) => TextEditingController(text: option)).toList();
+    optionControllers = widget.exercise.options
+        .map((option) => TextEditingController(text: option))
+        .toList();
     correctIndex = widget.exercise.correctIndex;
+  }
+
+  @override
+  void dispose() {
+    questionController.dispose();
+    explanationController.dispose();
+    xpController.dispose();
+    for (final controller in optionControllers) {
+      controller.dispose();
+    }
+    super.dispose();
   }
 
   @override
@@ -37,6 +54,7 @@ class _ReviewGeneratedExerciseScreenState extends State<ReviewGeneratedExerciseS
         padding: const EdgeInsets.all(20),
         children: [
           DuocCard(
+            radius: 24,
             child: Column(
               children: [
                 TextField(
@@ -50,13 +68,21 @@ class _ReviewGeneratedExerciseScreenState extends State<ReviewGeneratedExerciseS
                       Expanded(
                         child: TextField(
                           controller: optionControllers[index],
-                          decoration: InputDecoration(labelText: 'Opción ${index + 1}'),
+                          decoration: InputDecoration(
+                            labelText: 'Opción ${index + 1}',
+                          ),
                         ),
                       ),
-                      Radio<int>(
-                        value: index,
-                        groupValue: correctIndex,
-                        onChanged: (value) => setState(() => correctIndex = value ?? 0),
+                      IconButton(
+                        onPressed: () => setState(() => correctIndex = index),
+                        icon: Icon(
+                          correctIndex == index
+                              ? Icons.radio_button_checked_rounded
+                              : Icons.radio_button_unchecked_rounded,
+                          color: correctIndex == index
+                              ? const Color(0xFF8B5CF6)
+                              : Colors.white54,
+                        ),
                       ),
                     ],
                   ),
@@ -68,6 +94,7 @@ class _ReviewGeneratedExerciseScreenState extends State<ReviewGeneratedExerciseS
                 TextField(
                   controller: xpController,
                   decoration: const InputDecoration(labelText: 'XP'),
+                  keyboardType: TextInputType.number,
                 ),
               ],
             ),
@@ -79,10 +106,14 @@ class _ReviewGeneratedExerciseScreenState extends State<ReviewGeneratedExerciseS
               exerciseGenerationService.updateExercise(
                 widget.exercise.copyWith(
                   question: questionController.text,
-                  options: optionControllers.map((option) => option.text).toList(),
+                  options: optionControllers
+                      .map((option) => option.text)
+                      .toList(),
                   correctIndex: correctIndex,
                   explanation: explanationController.text,
-                  xpReward: int.tryParse(xpController.text) ?? widget.exercise.xpReward,
+                  xpReward:
+                      int.tryParse(xpController.text) ??
+                      widget.exercise.xpReward,
                 ),
               );
               Navigator.pop(context);

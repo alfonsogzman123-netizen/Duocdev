@@ -9,9 +9,8 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final level = progressService.level;
-    final xp = progressService.xp;
-    final progress = (xp / 1000).clamp(0.0, 1.0);
-    final badges = const ['Primera lección', 'Racha 7 días', 'Python inicial', 'Git básico'];
+    final progress = progressService.levelProgress;
+    final badges = progressService.badgeCatalog;
 
     return SafeArea(
       child: ListView(
@@ -20,28 +19,52 @@ class ProfileScreen extends StatelessWidget {
           const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Perfil', style: TextStyle(fontSize: 34, fontWeight: FontWeight.w800)),
+              Text(
+                'Perfil',
+                style: TextStyle(fontSize: 34, fontWeight: FontWeight.w800),
+              ),
               Icon(Icons.settings_outlined, color: Colors.white70),
             ],
           ),
           const SizedBox(height: 16),
           const _ProfileHeader(),
           const SizedBox(height: 16),
-          _LevelCard(level: level, progress: progress, xp: xp),
+          _LevelCard(level: level, progress: progress, xp: progressService.xp),
           const SizedBox(height: 14),
-          const Text('Resumen', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700)),
+          const Text(
+            'Resumen',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
+          ),
           const SizedBox(height: 10),
           Wrap(
             spacing: 10,
             runSpacing: 10,
             children: [
-              _SummaryCard(title: 'Cursos iniciados', value: '6', icon: Icons.menu_book_rounded, color: const Color(0xFF22D3EE)),
-              _SummaryCard(title: 'Insignias', value: '${progressService.badges.length}', icon: Icons.workspace_premium, color: const Color(0xFF8B5CF6)),
-              _SummaryCard(title: 'Días de racha', value: '${progressService.streakDays}', icon: Icons.local_fire_department, color: const Color(0xFFFB923C)),
+              _SummaryCard(
+                title: 'Cursos iniciados',
+                value: '6',
+                icon: Icons.menu_book_rounded,
+                color: const Color(0xFF22D3EE),
+              ),
+              _SummaryCard(
+                title: 'Insignias',
+                value: '${badges.where((badge) => badge.earned).length}',
+                icon: Icons.workspace_premium,
+                color: const Color(0xFF8B5CF6),
+              ),
+              _SummaryCard(
+                title: 'Días de racha',
+                value: '${progressService.streakDays}',
+                icon: Icons.local_fire_department,
+                color: const Color(0xFFFB923C),
+              ),
             ],
           ),
           const SizedBox(height: 14),
-          const Text('Insignias recientes', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700)),
+          const Text(
+            'Insignias',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
+          ),
           const SizedBox(height: 8),
           DuocCard(
             radius: 22,
@@ -49,10 +72,20 @@ class ProfileScreen extends StatelessWidget {
               spacing: 8,
               runSpacing: 8,
               children: badges
-                  .map((badge) => Chip(
-                        label: Text(badge),
-                        avatar: const Icon(Icons.check_circle_outline, size: 18),
-                      ))
+                  .map(
+                    (badge) => Chip(
+                      label: Text(badge.title),
+                      avatar: Icon(
+                        badge.earned
+                            ? Icons.check_circle_outline
+                            : Icons.lock_outline,
+                        size: 18,
+                      ),
+                      backgroundColor: badge.earned
+                          ? const Color(0xFF1E293B)
+                          : const Color(0xFF0F172A),
+                    ),
+                  )
                   .toList(),
             ),
           ),
@@ -84,15 +117,23 @@ class _ProfileHeader extends StatelessWidget {
             height: 92,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              gradient: const LinearGradient(colors: [Color(0xFF8B5CF6), Color(0xFF22D3EE)]),
+              gradient: const LinearGradient(
+                colors: [Color(0xFF8B5CF6), Color(0xFF22D3EE)],
+              ),
               border: Border.all(color: Colors.white24),
             ),
             child: const Icon(Icons.person, size: 52, color: Colors.white),
           ),
           const SizedBox(height: 10),
-          const Text('Estudiante DuocDev', style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800)),
+          const Text(
+            'Estudiante DuocDev',
+            style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800),
+          ),
           const SizedBox(height: 4),
-          const Text('Ingeniería Informática', style: TextStyle(color: Colors.white70, fontSize: 16)),
+          const Text(
+            'Ingeniería Informática',
+            style: TextStyle(color: Colors.white70, fontSize: 16),
+          ),
           const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -101,7 +142,13 @@ class _ProfileHeader extends StatelessWidget {
               borderRadius: BorderRadius.circular(999),
               border: Border.all(color: const Color(0xFF334155)),
             ),
-            child: const Text('Duoc UC', style: TextStyle(color: Color(0xFF22D3EE), fontWeight: FontWeight.w700)),
+            child: const Text(
+              'Duoc UC',
+              style: TextStyle(
+                color: Color(0xFF22D3EE),
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           ),
         ],
       ),
@@ -110,7 +157,11 @@ class _ProfileHeader extends StatelessWidget {
 }
 
 class _LevelCard extends StatelessWidget {
-  const _LevelCard({required this.level, required this.progress, required this.xp});
+  const _LevelCard({
+    required this.level,
+    required this.progress,
+    required this.xp,
+  });
 
   final int level;
   final double progress;
@@ -126,8 +177,17 @@ class _LevelCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Nivel $level', style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w800)),
-                const Text('Programador en formación', style: TextStyle(color: Colors.white70, fontSize: 16)),
+                Text(
+                  'Nivel $level',
+                  style: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const Text(
+                  'Programador en formación',
+                  style: TextStyle(color: Colors.white70, fontSize: 16),
+                ),
                 const SizedBox(height: 10),
                 LinearProgressIndicator(
                   value: progress,
@@ -136,7 +196,10 @@ class _LevelCard extends StatelessWidget {
                   backgroundColor: const Color(0xFF334155),
                 ),
                 const SizedBox(height: 8),
-                Text('$xp / 1000 XP', style: const TextStyle(color: Colors.white70)),
+                Text(
+                  '$xp XP acumulados',
+                  style: const TextStyle(color: Colors.white70),
+                ),
               ],
             ),
           ),
@@ -144,7 +207,14 @@ class _LevelCard extends StatelessWidget {
           CircleAvatar(
             radius: 34,
             backgroundColor: const Color(0xFF1E293B),
-            child: Text('$level', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w800, color: Color(0xFF8B5CF6))),
+            child: Text(
+              '$level',
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w800,
+                color: Color(0xFF8B5CF6),
+              ),
+            ),
           ),
         ],
       ),
@@ -153,7 +223,13 @@ class _LevelCard extends StatelessWidget {
 }
 
 class _SummaryCard extends StatelessWidget {
-  const _SummaryCard({required this.title, required this.value, required this.icon, required this.color});
+  const _SummaryCard({
+    required this.title,
+    required this.value,
+    required this.icon,
+    required this.color,
+  });
+
   final String title;
   final String value;
   final IconData icon;
@@ -166,12 +242,18 @@ class _SummaryCard extends StatelessWidget {
       child: DuocCard(
         radius: 20,
         padding: const EdgeInsets.all(14),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Icon(icon, color: color),
-          const SizedBox(height: 8),
-          Text(value, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
-          Text(title, style: const TextStyle(color: Colors.white70)),
-        ]),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(icon, color: color),
+            const SizedBox(height: 8),
+            Text(
+              value,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+            ),
+            Text(title, style: const TextStyle(color: Colors.white70)),
+          ],
+        ),
       ),
     );
   }

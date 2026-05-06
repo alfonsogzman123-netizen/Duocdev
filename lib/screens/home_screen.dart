@@ -1,80 +1,311 @@
 import 'dart:math' as math;
 
+import 'package:duocdev/screens/smart_practice_screen.dart';
+import 'package:duocdev/services/api_service.dart';
+import 'package:duocdev/services/exercise_generation_service.dart';
 import 'package:duocdev/services/progress_service.dart';
 import 'package:duocdev/widgets/app_cards.dart';
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.onGoToRoute});
+
   final VoidCallback onGoToRoute;
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  bool? _backendConnected;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadStatus();
+  }
+
+  Future<void> _loadStatus() async {
+    final connected = await apiService.healthCheck();
+    await exerciseGenerationService.getExercises();
+    if (mounted) setState(() => _backendConnected = connected);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final progress = progressService.overallProgress;
+    final practice = exerciseGenerationService.studentPracticeExercises();
     return SafeArea(
       child: ListView(
         padding: const EdgeInsets.all(22),
         children: [
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Icon(Icons.menu, size: 30), Icon(Icons.notifications_none, size: 30)],
-          ),
-          const SizedBox(height: 18),
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('¡Hola, Estudiante!', style: TextStyle(color: Colors.white70, fontSize: 20)),
+                    Text(
+                      'Hola, Estudiante 👋',
+                      style: TextStyle(color: Colors.white70, fontSize: 20),
+                    ),
                     SizedBox(height: 4),
-                    Text('Bienvenido a', style: TextStyle(fontSize: 36, fontWeight: FontWeight.w800)),
-                    Text('DuocDev', style: TextStyle(fontSize: 38, color: Color(0xFF22D3EE), fontWeight: FontWeight.w800)),
-                    Text('Aprende. Practica. Progresa.', style: TextStyle(color: Color(0xFF94A3B8), fontSize: 18)),
+                    Text(
+                      'Continúa tu ruta de programación',
+                      style: TextStyle(
+                        fontSize: 32,
+                        height: 1.1,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
                   ],
                 ),
               ),
-              const _HeroIllustration(),
+              if (_backendConnected != null)
+                _ConnectionPill(connected: _backendConnected!),
             ],
           ),
-          const SizedBox(height: 20),
-          _PremiumProgressCard(progress: progress),
-          const SizedBox(height: 20),
-          const SectionTitle(
-            'Racha diaria 🔥',
-            trailing: Text('7 días', style: TextStyle(color: Color(0xFFFB923C), fontSize: 22, fontWeight: FontWeight.w700)),
-          ),
-          const SizedBox(height: 14),
-          Wrap(spacing: 10, runSpacing: 10, children: const [
-            _Stat(icon: Icons.menu_book_rounded, title: 'Lecciones', value: '32', color: Color(0xFF8B5CF6)),
-            _Stat(icon: Icons.emoji_events, title: 'Retos', value: '14', color: Color(0xFFF59E0B)),
-            _Stat(icon: Icons.code, title: 'Proyectos', value: '4', color: Color(0xFF38BDF8)),
-            _Stat(icon: Icons.bar_chart, title: 'Ranking', value: '#12', color: Color(0xFFF59E0B)),
-          ]),
-          const SizedBox(height: 24),
-          const Text('Continúa aprendiendo', style: TextStyle(fontSize: 32, fontWeight: FontWeight.w800)),
+          const SizedBox(height: 18),
+          const _PremiumProgressCard(),
+          const SizedBox(height: 16),
+          const _DailyMissionCard(),
+          const SizedBox(height: 22),
+          const SectionTitle('Continúa aprendiendo'),
           const SizedBox(height: 12),
           DuocCard(
-            onTap: onGoToRoute,
+            onTap: widget.onGoToRoute,
             radius: 24,
-            child: const Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
-                    Text('🐍', style: TextStyle(fontSize: 42)),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: Text('Python Básico\nFunciones y módulos', style: TextStyle(fontSize: 22, height: 1.25, fontWeight: FontWeight.w600)),
+                    Container(
+                      width: 54,
+                      height: 54,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF0F172A),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: const Color(0xFF334155)),
+                      ),
+                      child: const Icon(
+                        Icons.code_rounded,
+                        color: Color(0xFF22D3EE),
+                        size: 30,
+                      ),
                     ),
-                    Icon(Icons.arrow_forward_ios_rounded, color: Colors.white70),
+                    const SizedBox(width: 12),
+                    const Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Python',
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          Text(
+                            'Funciones, módulos y práctica guiada',
+                            style: TextStyle(color: Colors.white70),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      color: Colors.white70,
+                    ),
                   ],
                 ),
-                SizedBox(height: 14),
-                LinearProgressIndicator(value: 0.75, minHeight: 9, color: Color(0xFF8B5CF6), backgroundColor: Color(0xFF334155)),
-                SizedBox(height: 8),
-                Align(alignment: Alignment.centerRight, child: Text('75%', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18))),
+                const SizedBox(height: 14),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(999),
+                  child: const LinearProgressIndicator(
+                    value: 0.75,
+                    minHeight: 9,
+                    color: Color(0xFF8B5CF6),
+                    backgroundColor: Color(0xFF334155),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    '75% completado',
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (practice.isNotEmpty) ...[
+            const SizedBox(height: 22),
+            _SmartPracticeHomeCard(
+              count: practice.length,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const SmartPracticeScreen()),
+              ).then((_) => setState(() {})),
+            ),
+          ],
+          const SizedBox(height: 22),
+          Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: const [
+              _Stat(
+                icon: Icons.local_fire_department,
+                title: 'Racha',
+                value: '7 días',
+                color: Color(0xFFFB923C),
+              ),
+              _Stat(
+                icon: Icons.emoji_events,
+                title: 'Insignias',
+                value: '7',
+                color: Color(0xFFF59E0B),
+              ),
+              _Stat(
+                icon: Icons.auto_awesome,
+                title: 'Prácticas IA',
+                value: '4',
+                color: Color(0xFF22D3EE),
+              ),
+              _Stat(
+                icon: Icons.bar_chart_rounded,
+                title: 'Meta diaria',
+                value: '50 XP',
+                color: Color(0xFF8B5CF6),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ConnectionPill extends StatelessWidget {
+  const _ConnectionPill({required this.connected});
+
+  final bool connected;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+      decoration: BoxDecoration(
+        color: connected ? const Color(0xFF052E16) : const Color(0xFF431407),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(
+          color: connected ? const Color(0xFF22C55E) : const Color(0xFFFB923C),
+        ),
+      ),
+      child: Text(
+        connected ? 'Conectado' : 'Modo demo',
+        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800),
+      ),
+    );
+  }
+}
+
+class _PremiumProgressCard extends StatelessWidget {
+  const _PremiumProgressCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final progress = progressService.levelProgress;
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        gradient: const LinearGradient(
+          colors: [Color(0xFF1E293B), Color(0xFF111827), Color(0xFF172554)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        border: Border.all(color: const Color(0xFF334155)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.35),
+            blurRadius: 26,
+            offset: const Offset(0, 12),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Progreso de aprendizaje',
+                  style: TextStyle(color: Colors.white70),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Nivel ${progressService.level}',
+                  style: const TextStyle(
+                    fontSize: 34,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const Text(
+                  'Programador en formación',
+                  style: TextStyle(color: Color(0xFF94A3B8), fontSize: 17),
+                ),
+                const SizedBox(height: 12),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(999),
+                  child: LinearProgressIndicator(
+                    value: progress,
+                    minHeight: 8,
+                    color: const Color(0xFF22D3EE),
+                    backgroundColor: const Color(0xFF334155),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  '${progressService.xpIntoLevel} / ${ProgressService.xpPerLevel} XP hacia el próximo nivel',
+                  style: const TextStyle(color: Colors.white70, fontSize: 15),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Racha ${progressService.streakDays} días • Meta diaria ${ProgressService.dailyGoalXp} XP',
+                  style: const TextStyle(color: Color(0xFFCBD5E1)),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 16),
+          SizedBox(
+            width: 94,
+            height: 94,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Transform.rotate(
+                  angle: -math.pi / 2,
+                  child: SizedBox(
+                    width: 94,
+                    height: 94,
+                    child: CircularProgressIndicator(
+                      value: progress,
+                      strokeWidth: 8,
+                      color: const Color(0xFF60A5FA),
+                      backgroundColor: const Color(0xFF334155),
+                    ),
+                  ),
+                ),
+                Text(
+                  '${(progress * 100).round()}%',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 20,
+                  ),
+                ),
               ],
             ),
           ),
@@ -84,100 +315,98 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class _HeroIllustration extends StatelessWidget {
-  const _HeroIllustration();
+class _DailyMissionCard extends StatelessWidget {
+  const _DailyMissionCard();
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 120,
-      height: 118,
-      child: Stack(
+    return DuocCard(
+      radius: 24,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Positioned(
-            right: 8,
-            top: 8,
-            child: Container(
-              width: 96,
-              height: 96,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: const LinearGradient(colors: [Color(0xFF1E3A8A), Color(0xFF8B5CF6)]),
-                boxShadow: [BoxShadow(color: const Color(0xFF8B5CF6).withOpacity(0.35), blurRadius: 18)],
+          const Row(
+            children: [
+              Icon(Icons.flag_rounded, color: Color(0xFFFB923C)),
+              SizedBox(width: 8),
+              Text(
+                'Meta de hoy',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
               ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            progressService.dailyGoalLabel,
+            style: const TextStyle(color: Colors.white70, height: 1.35),
+          ),
+          const SizedBox(height: 12),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(999),
+            child: LinearProgressIndicator(
+              value: progressService.dailyGoalProgress,
+              minHeight: 9,
+              color: const Color(0xFFFB923C),
+              backgroundColor: const Color(0xFF334155),
             ),
           ),
-          Positioned(
-            left: 2,
-            top: 35,
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(color: const Color(0xFF111827), borderRadius: BorderRadius.circular(14), border: Border.all(color: const Color(0xFF334155))),
-              child: const Icon(Icons.code_rounded, color: Color(0xFF22D3EE), size: 28),
-            ),
+          const SizedBox(height: 8),
+          Text(
+            '${progressService.todayXp} / ${ProgressService.dailyGoalXp} XP completados hoy',
+            style: const TextStyle(color: Colors.white70),
           ),
-          const Positioned(right: 16, top: 26, child: Icon(Icons.school_rounded, size: 44, color: Colors.white)),
         ],
       ),
     );
   }
 }
 
-class _PremiumProgressCard extends StatelessWidget {
-  const _PremiumProgressCard({required this.progress});
-  final double progress;
+class _SmartPracticeHomeCard extends StatelessWidget {
+  const _SmartPracticeHomeCard({required this.count, required this.onTap});
+
+  final int count;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        gradient: const LinearGradient(colors: [Color(0xFF1E293B), Color(0xFF111827), Color(0xFF172554)], begin: Alignment.topLeft, end: Alignment.bottomRight),
-        border: Border.all(color: const Color(0xFF334155)),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.35), blurRadius: 26, offset: const Offset(0, 12))],
-      ),
-      child: Row(children: [
-        Expanded(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            const Text('Tu progreso general', style: TextStyle(color: Colors.white70)),
-            const SizedBox(height: 8),
-            Text('Nivel ${progressService.level}', style: const TextStyle(fontSize: 34, fontWeight: FontWeight.w800)),
-            const Text('Programador en formación', style: TextStyle(color: Color(0xFF94A3B8), fontSize: 17)),
-            const SizedBox(height: 12),
-            LinearProgressIndicator(value: progress, minHeight: 8, borderRadius: BorderRadius.circular(50), color: const Color(0xFF22D3EE), backgroundColor: const Color(0xFF334155)),
-            const SizedBox(height: 8),
-            Text('${progressService.xp} / 1000 XP', style: const TextStyle(color: Colors.white70, fontSize: 18)),
-          ]),
-        ),
-        SizedBox(
-          width: 92,
-          height: 92,
-          child: Stack(alignment: Alignment.center, children: [
-            Transform.rotate(
-              angle: -math.pi / 2,
-              child: SizedBox(
-                width: 92,
-                height: 92,
-                child: CircularProgressIndicator(value: progress, strokeWidth: 8, color: const Color(0xFF60A5FA), backgroundColor: const Color(0xFF334155)),
+    return DuocCard(
+      radius: 24,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Row(
+            children: [
+              Icon(Icons.auto_awesome, color: Color(0xFF22D3EE)),
+              SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  'Práctica generada por profesor',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
+                ),
               ),
-            ),
-            Container(
-              width: 68,
-              height: 68,
-              decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0xFF111827)),
-              alignment: Alignment.center,
-              child: Text('${(progress * 100).round()}%', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 20)),
-            ),
-          ]),
-        ),
-      ]),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '$count ejercicios publicados desde material académico. Practica con contenido real de clase.',
+            style: const TextStyle(color: Colors.white70, height: 1.35),
+          ),
+          const SizedBox(height: 14),
+          PrimaryButton(label: 'Practicar ahora', onPressed: onTap),
+        ],
+      ),
     );
   }
 }
 
 class _Stat extends StatelessWidget {
-  const _Stat({required this.icon, required this.title, required this.value, required this.color});
+  const _Stat({
+    required this.icon,
+    required this.title,
+    required this.value,
+    required this.color,
+  });
+
   final IconData icon;
   final String title;
   final String value;
@@ -186,15 +415,22 @@ class _Stat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 160,
+      width: 158,
       child: DuocCard(
         radius: 20,
-        child: Column(children: [
-          Icon(icon, color: color, size: 32),
-          const SizedBox(height: 8),
-          Text(value, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 18)),
-          Text(title, style: const TextStyle(color: Colors.white70)),
-        ]),
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(icon, color: color, size: 30),
+            const SizedBox(height: 8),
+            Text(
+              value,
+              style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+            ),
+            Text(title, style: const TextStyle(color: Colors.white70)),
+          ],
+        ),
       ),
     );
   }

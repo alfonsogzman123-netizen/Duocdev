@@ -30,7 +30,13 @@ class DuocCard extends StatelessWidget {
       ),
       child: child,
     );
-    return onTap == null ? card : InkWell(onTap: onTap, borderRadius: BorderRadius.circular(radius), child: card);
+    return onTap == null
+        ? card
+        : InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(radius),
+            child: card,
+          );
   }
 }
 
@@ -43,15 +49,24 @@ class SectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(child: Text(title, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w700))),
-        if (trailing != null) trailing!,
+        Expanded(
+          child: Text(
+            title,
+            style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w700),
+          ),
+        ),
+        ?trailing,
       ],
     );
   }
 }
 
 class PrimaryButton extends StatelessWidget {
-  const PrimaryButton({super.key, required this.label, required this.onPressed});
+  const PrimaryButton({
+    super.key,
+    required this.label,
+    required this.onPressed,
+  });
   final String label;
   final VoidCallback? onPressed;
 
@@ -60,7 +75,9 @@ class PrimaryButton extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(18),
-        gradient: const LinearGradient(colors: [Color(0xFF7C3AED), Color(0xFF22D3EE)]),
+        gradient: const LinearGradient(
+          colors: [Color(0xFF7C3AED), Color(0xFF22D3EE)],
+        ),
       ),
       child: ElevatedButton(
         onPressed: onPressed,
@@ -68,9 +85,18 @@ class PrimaryButton extends StatelessWidget {
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
           minimumSize: const Size.fromHeight(58),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
+          ),
         ),
-        child: Text(label, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Colors.white)),
+        child: Text(
+          label,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+          ),
+        ),
       ),
     );
   }

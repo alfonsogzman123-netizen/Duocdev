@@ -4,22 +4,33 @@ class SyncQueueService {
   final List<SyncTask> _tasks = [];
 
   void addTask(SyncTask task) => _tasks.insert(0, task);
-  List<SyncTask> getPendingTasks() => _tasks.where((t) => t.status == SyncTaskStatus.pending).toList();
+  List<SyncTask> getPendingTasks() =>
+      _tasks.where((t) => t.status == SyncTaskStatus.pending).toList();
   int get pendingCount => getPendingTasks().length;
 
   void markSynced(String id) {
     final i = _tasks.indexWhere((t) => t.id == id);
-    if (i >= 0) _tasks[i] = _tasks[i].copyWith(status: SyncTaskStatus.synced);
+    if (i >= 0) {
+      _tasks[i] = _tasks[i].copyWith(status: SyncTaskStatus.synced);
+    }
   }
 
   void markFailed(String id, String message) {
     final i = _tasks.indexWhere((t) => t.id == id);
-    if (i >= 0) _tasks[i] = _tasks[i].copyWith(status: SyncTaskStatus.failed, errorMessage: message);
+    if (i >= 0) {
+      _tasks[i] = _tasks[i].copyWith(
+        status: SyncTaskStatus.failed,
+        errorMessage: message,
+      );
+    }
   }
 
-  void clearSynced() => _tasks.removeWhere((t) => t.status == SyncTaskStatus.synced);
+  void clearSynced() =>
+      _tasks.removeWhere((t) => t.status == SyncTaskStatus.synced);
 
-  Future<int> trySyncAll(Future<bool> Function(SyncTask task) syncHandler) async {
+  Future<int> trySyncAll(
+    Future<bool> Function(SyncTask task) syncHandler,
+  ) async {
     var synced = 0;
     for (final task in List<SyncTask>.from(getPendingTasks())) {
       final ok = await syncHandler(task);

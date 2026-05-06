@@ -33,10 +33,22 @@ class _MainShellState extends State<MainShell> {
         unselectedItemColor: const Color(0xFF94A3B8),
         selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w700),
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: 'Inicio'),
-          BottomNavigationBarItem(icon: Icon(Icons.menu_book_rounded), label: 'Cursos'),
-          BottomNavigationBarItem(icon: Icon(Icons.auto_awesome), label: 'Tutor IA'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_rounded), label: 'Perfil'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_rounded),
+            label: 'Inicio',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.menu_book_rounded),
+            label: 'Cursos',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.auto_awesome),
+            label: 'Tutor IA',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_rounded),
+            label: 'Perfil',
+          ),
         ],
       ),
     );

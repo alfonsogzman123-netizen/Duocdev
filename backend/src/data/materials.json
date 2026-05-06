@@ -1,12 +1,28 @@
 [
   {
+    "id": "mat_1778097278827",
+    "title": "cd C:\\Users\\alfon\\duocdevflutter analyzeflutter testflutter run --dart-define=BACKEND_BASE_URL=http://10.0.2.2:3000",
+    "courseId": "python",
+    "unitName": "cd C:\\Users\\alfon\\duocdevflutter analyzeflutter testflutter run --dart-define=BACKEND_BASE_URL=http://10.0.2.2:3000",
+    "teacherName": "Profesor DuocDev",
+    "rawText": "cd C:\\Users\\alfon\\duocdev\nflutter analyze\nflutter test\nflutter run --dart-define=BACKEND_BASE_URL=http://10.0.2.2:3000",
+    "tags": [
+      "cd C:\\Users\\alfon\\duocdevflutter analyzeflutter testflutter run --dart-define=BACKEND_BASE_URL=http://10.0.2.2:3000"
+    ],
+    "createdAt": "2026-05-06T19:54:38.828Z"
+  },
+  {
     "id": "mat_py_demo",
     "title": "Variables y condicionales en Python",
     "courseId": "python",
     "unitName": "Fundamentos",
     "teacherName": "Profesor DuocDev",
     "rawText": "Las variables guardan datos en memoria. if, elif y else permiten ejecutar distintas ramas lógicas según condiciones verdaderas o falsas.",
-    "tags": ["python", "variables", "condicionales"],
+    "tags": [
+      "python",
+      "variables",
+      "condicionales"
+    ],
     "createdAt": "2026-05-04T00:00:00.000Z"
   }
 ]
