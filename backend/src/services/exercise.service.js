@@ -1,15 +1,25 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-const dataDir = path.join(process.cwd(), 'src', 'data');
-const exercisesPath = path.join(dataDir, 'exercises.json');
+const exercisesPath = path.resolve(process.cwd(), 'backend/src/data/exercises.json');
+
+async function ensureFile() {
+  try {
+    await fs.access(exercisesPath);
+  } catch (_) {
+    await fs.mkdir(path.dirname(exercisesPath), { recursive: true });
+    await fs.writeFile(exercisesPath, '[]');
+  }
+}
 
 async function readExercises() {
+  await ensureFile();
   const raw = await fs.readFile(exercisesPath, 'utf-8');
   return JSON.parse(raw);
 }
 
 async function writeExercises(exercises) {
+  await ensureFile();
   await fs.writeFile(exercisesPath, JSON.stringify(exercises, null, 2));
 }
 

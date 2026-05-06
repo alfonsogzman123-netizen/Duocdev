@@ -1,15 +1,25 @@
-import fs from 'fs/promises';
-import path from 'path';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 
-const dataDir = path.join(process.cwd(), 'src', 'data');
-const materialsPath = path.join(dataDir, 'materials.json');
+const materialsPath = path.resolve(process.cwd(), 'backend/src/data/materials.json');
+
+async function ensureFile() {
+  try {
+    await fs.access(materialsPath);
+  } catch (_) {
+    await fs.mkdir(path.dirname(materialsPath), { recursive: true });
+    await fs.writeFile(materialsPath, '[]');
+  }
+}
 
 async function readMaterials() {
+  await ensureFile();
   const raw = await fs.readFile(materialsPath, 'utf-8');
   return JSON.parse(raw);
 }
 
 async function writeMaterials(materials) {
+  await ensureFile();
   await fs.writeFile(materialsPath, JSON.stringify(materials, null, 2));
 }
 
